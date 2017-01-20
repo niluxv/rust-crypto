@@ -7,6 +7,7 @@ homepage = "https://github.com/niluxv/rust-crypto/"
 repository = "https://github.com/niluxv/rust-crypto/"
 description = "A (mostly) pure-Rust implementation of various common cryptographic algorithms."
 keywords = [ "Crypto", "MD5", "Sha1", "Sha2", "AES" ]
+categories = ["cryptography"]
 readme = "README.md"
 build = "build.rs"
 
