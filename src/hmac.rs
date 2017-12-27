@@ -125,6 +125,7 @@ mod test {
     use hmac::Hmac;
     use digest::Digest;
     use md5::Md5;
+    use sha2::Sha256;
 
     struct Test {
         key: Vec<u8>,
@@ -192,5 +193,22 @@ mod test {
             let expected = MacResult::new(&t.expected[..]);
             assert!(result == expected);
         }
+    }
+    
+    #[test]
+    fn hmac_sha256_test() {
+        // first test vector from https://tools.ietf.org/html/rfc4868#section-2.7
+        let data = "Hi There".as_bytes();
+        let key = [0x0b; 20];
+        let digest = Sha256::new();
+
+        let mut hmac = Hmac::<Sha256>::new(digest, &key);
+        hmac.input(&data);
+        let result = hmac.result();
+        let code = result.code();
+
+        let expected = [176_u8, 52_u8, 76_u8, 97_u8, 216_u8, 219_u8, 56_u8, 83_u8, 92_u8, 168_u8, 175_u8, 206_u8, 175_u8, 11_u8, 241_u8, 43_u8, 136_u8, 29_u8, 194_u8, 0_u8, 201_u8, 131_u8, 61_u8, 167_u8, 38_u8, 233_u8, 55_u8, 108_u8, 46_u8, 50_u8, 207_u8, 247_u8];
+
+        assert_eq!(&expected[..], &code[..]);
     }
 }
