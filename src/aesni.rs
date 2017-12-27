@@ -4,6 +4,13 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+/*!
+This public module implements the use of the aes-ni instructions in modern x86(_64) CPU's for aes.
+Note that it only works on x86(_64) CPU's with the aes-ni extension.
+
+When compiled for non-x86(_64) this module won't exist.
+*/
+
 use aes::KeySize;
 use aes::KeySize::{KeySize128, KeySize192, KeySize256};
 use symmetriccipher::{BlockEncryptor, BlockDecryptor};

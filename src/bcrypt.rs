@@ -4,6 +4,10 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+/*!
+This public module implements the bcrypt password hash function (slow hash function).
+*/
+
 use blowfish::Blowfish;
 use cryptoutil::{write_u32_be};
 use step_by::RangeExt;

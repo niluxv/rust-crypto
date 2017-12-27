@@ -21,6 +21,7 @@ pub enum KeySize {
     KeySize256
 }
 
+// aes in electronic codebook mode (ecb) encryption
 /// Get the best implementation of an EcbEncryptor
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub fn ecb_encryptor<X: PaddingProcessor + Send + 'static>(
@@ -28,10 +29,12 @@ pub fn ecb_encryptor<X: PaddingProcessor + Send + 'static>(
         key: &[u8],
         padding: X) -> Box<Encryptor> {
     if util::supports_aesni() {
+        // use the aes instruction set (aes-ni) in new x86(_64) processors (aesni module defined in the file 'aesni.rs' and the files 'aesni_helpers.c' and 'aesni_helpers.asm')
         let aes_enc = aesni::AesNiEncryptor::new(key_size, key);
         let enc = Box::new(EcbEncryptor::new(aes_enc, padding));
         enc
     } else {
+        // use rust implementation for aes (defined in the file 'aessafe.rs')
         match key_size {
             KeySize::KeySize128 => {
                 let aes_enc = aessafe::AesSafe128Encryptor::new(key);
@@ -77,6 +80,7 @@ pub fn ecb_encryptor<X: PaddingProcessor + Send + 'static>(
     }
 }
 
+// aes in electronic codebook mode (ecb) decryption
 /// Get the best implementation of an EcbDecryptor
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub fn ecb_decryptor<X: PaddingProcessor + Send + 'static>(
@@ -133,6 +137,7 @@ pub fn ecb_decryptor<X: PaddingProcessor + Send + 'static>(
     }
 }
 
+// aes in cipher block chaining mode (cbc) encryption
 /// Get the best implementation of a CbcEncryptor
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub fn cbc_encryptor<X: PaddingProcessor + Send + 'static>(
@@ -191,6 +196,7 @@ pub fn cbc_encryptor<X: PaddingProcessor + Send + 'static>(
     }
 }
 
+// aes in cipher block chaining mode (cbc) decryption
 /// Get the best implementation of a CbcDecryptor
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub fn cbc_decryptor<X: PaddingProcessor + Send + 'static>(
@@ -249,6 +255,7 @@ pub fn cbc_decryptor<X: PaddingProcessor + Send + 'static>(
     }
 }
 
+// aes in counter mode (ctr) (encryption and decryption are the same because of the xor operation)
 /// Get the best implementation of a Ctr
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub fn ctr(

@@ -4,6 +4,13 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+/*!
+This public module implements Galois/Counter Mode (GCM) using the AES block cipher.
+GCM provides authenticated encryption using the CTR mode of operation along with
+Galois Message Authentication Code (GMAC). GCM is an efficient algorithm providing
+authenticated encryption.
+*/
+
 use aes::{ctr, KeySize};
 use aead::{AeadEncryptor,AeadDecryptor};
 use cryptoutil::copy_memory;
