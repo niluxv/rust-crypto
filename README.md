@@ -1,4 +1,5 @@
 Fork of [https://github.com/DaGenix/rust-crypto](https://github.com/DaGenix/rust-crypto).
+[![Build Status](https://travis-ci.org/niluxv/rust-crypto.png?branch=master)](https://travis-ci.org/niluxv/rust-crypto)
 
 # Rust-Crypto
 
