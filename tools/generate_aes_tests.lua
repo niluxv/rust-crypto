@@ -6,14 +6,14 @@ conf_mode_of_operation = {ECB = "ECB", CTR = "CTR", CBC = "CBC"}
 conf_mode_of_action = {Encrypt = "encrypt", Decrypt = nil}
 conf_blockcipher = {["AES128"] = "AES128", ["AES192"] = "AES192", ["AES256"] = "AES256"}
 
-conf_headings = {["Plaintext"] = "plaintext", ["Ciphertext"] = "ciphertext", ["Key"] = "key", ["IV"] = "iv"}
+conf_headings = {["Plaintext"] = "plaintext", ["Ciphertext"] = "ciphertext", ["Key"] = "key", ["IV"] = "iv", ["Init. Counter"] = "ctr"}
 
 
 -- #lib
 
 function string_trim(s)
- local n = s:find"%S"
- return n and s:match(".*%S", n) or ""
+	local n = s:find"%S"
+	return n and s:match(".*%S", n) or ""
 end
 -- http://lua-users.org/lists/lua-l/2009-12/msg00904.html
 
@@ -84,15 +84,16 @@ end
 
 function create_rust_test(mode, test_vector, i)
 	if not i then i = 1 end
-	local rust_str = "#[test]\nfn test_" .. string.lower(mode.blockcipher) .. "_" .. string.lower(mode.mode_of_operation) .. "_" .. mode.mode_of_action .. i .. "() {\n"
 	if mode.mode_of_action ~= "encrypt" then return false end
+	local rust_str = "#[test]\nfn test_" .. string.lower(mode.blockcipher) .. "_" .. string.lower(mode.mode_of_operation)
 	if mode.mode_of_operation == "ECB" or mode.mode_of_operation == "CBC" then
 		-- code for blockmodes
+		rust_str = rust_str  .. "_" .. mode.mode_of_action .. i .. "() {\n"
 		rust_str = rust_str .. "\tlet key: Vec<u8> = " .. generate_hex_vector(test_vector.key) .. ";\n"
 		if mode.mode_of_operation == "CBC" then
 			rust_str = rust_str .. "\tlet iv: Vec<u8> = " .. generate_hex_vector(test_vector.iv) .. ";\n"
 		end
-		rust_str = rust_str .. "\t\n\tTestDataCbc {\n\t\tdata : " .. generate_hex_vector(test_vector.plaintext)
+		rust_str = rust_str .. "\t\n\tTestDataBlockMode {\n\t\tdata : " .. generate_hex_vector(test_vector.plaintext)
 												  .. ",\n\t\texpected : " .. generate_hex_vector(test_vector.ciphertext)
 												  .. ",\n\t\tencryptor : "
 		if mode.mode_of_operation == "CBC" then
@@ -105,8 +106,13 @@ function create_rust_test(mode, test_vector, i)
 		rust_str = rust_str .. "\n\t}.run_test()"
 	elseif mode.mode_of_operation == "CTR" then
 		-- code for streamciphers
-		-- to be written
-		return false
+		rust_str = rust_str .. i .. "() {\n"
+		rust_str = rust_str .. "\tlet key: Vec<u8> = " .. generate_hex_vector(test_vector.key) .. ";\n"
+		rust_str = rust_str .. "\tlet ctr: Vec<u8> = " .. generate_hex_vector(test_vector.ctr) .. ";\n"
+		rust_str = rust_str .. "\t\n\tTestDataStreamMode {\n\t\tdata : " .. generate_hex_vector(test_vector.plaintext)
+														  .. ",\n\t\texpected : " .. generate_hex_vector(test_vector.ciphertext)
+														  .. ",\n\t\tstreamcipher_enc : aes::ctr(" .. get_keysize(mode.blockcipher) .. ", &key[..], &ctr[..])"
+														  .. ",\n\t\tstreamcipher_dec : aes::ctr(" .. get_keysize(mode.blockcipher) .. ", &key[..], &ctr[..])\n\t}.run_test()"
 	end
 	rust_str = rust_str .. "\n}\n\n"
 	string.gsub(rust_str, "\t", "    ")
