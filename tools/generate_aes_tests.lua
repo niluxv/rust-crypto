@@ -9,9 +9,6 @@ conf_blockcipher = {["AES128"] = "AES128", ["AES192"] = "AES192", ["AES256"] = "
 conf_headings = {["Plaintext"] = "plaintext", ["Ciphertext"] = "ciphertext", ["Key"] = "key", ["IV"] = "iv"}
 
 
-
-
-
 -- #lib
 
 function string_trim(s)
@@ -19,44 +16,6 @@ function string_trim(s)
  return n and s:match(".*%S", n) or ""
 end
 -- http://lua-users.org/lists/lua-l/2009-12/msg00904.html
-
-function dump_print(t,indent)
-    local names = {}
-    if not indent then indent = "" end
-    for n,g in pairs(t) do
-        table.insert(names,n)
-    end
-    table.sort(names)
-    for i,n in pairs(names) do
-        local v = t[n]
-        if type(v) == "table" then
-            if(v==t) then -- prevent endless loop if table contains reference to itself
-                print(indent..tostring(n)..": <-")
-            else
-                print(indent..tostring(n)..":")
-                dump_print(v,indent.."   ")
-            end
-        else
-            if type(v) == "function" then
-                print(indent..tostring(n).."()")
-            else
-                print(indent..tostring(n)..": "..tostring(v))
-            end
-        end
-    end
-end
-
-
-
-
-
-
-
-
-
-
-
-
 
 -- #functions
 
