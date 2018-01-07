@@ -63,7 +63,3 @@ test_script:
   - cargo build --verbose
   - cargo test
 
-branches:
-  only:
-    - master
-
