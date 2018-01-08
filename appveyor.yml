@@ -1,5 +1,6 @@
-# Based on the "rust-everywhere" template v0.1.42
+# Based on the "rust-everywhere" template v0.1.42 and the "trust" template v0.1.1
 # https://github.com/japaric/rust-everywhere/blob/master/appveyor.yml
+# https://github.com/japaric/trust/blob/master/appveyor.yml
 # Test only, without deploy
 
 clone_depth: 50
@@ -9,11 +10,6 @@ branches:
 image: Visual Studio 2017
 
 environment:
-  global:
-    # This will be used as part of the zipfile name
-    # TODO change the project name
-    PROJECT_NAME: rust-crypto
-  # TODO feel free to delete targets/channels you don't need
   matrix:
     # Stable channel
     - TARGET: i686-pc-windows-gnu
@@ -46,7 +42,16 @@ environment:
 # Install Rust and Cargo
 # (Based on from https://github.com/rust-lang/libc/blob/master/appveyor.yml)
 install:
+  # Add MinGw to PATH environment
+  - ps: >-
+      If ($Env:TARGET -eq 'x86_64-pc-windows-gnu') {
+        $Env:PATH += ';C:\msys64\mingw64\bin'
+      } ElseIf ($Env:TARGET -eq 'i686-pc-windows-gnu') {
+        $Env:PATH += ';C:\msys64\mingw32\bin'
+      }
+  # Download the rustup installer
   - curl -sSf -o rustup-init.exe https://win.rustup.rs
+  # Run the rustup installer
   - rustup-init.exe --default-host %TARGET% --default-toolchain %CHANNEL% -y
   - set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
   - rustc -Vv
@@ -58,7 +63,6 @@ install:
 build: false
 
 # Equivalent to Travis' `script` phase
-# TODO modify this phase as you see fit
 test_script:
   - cargo build --verbose
   - cargo test
