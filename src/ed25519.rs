@@ -11,6 +11,8 @@ static L: [u8; 32] =
         0x58, 0x12, 0x63, 0x1a, 0x5c, 0xf5, 0xd3, 0xed ];
 
 pub fn keypair(seed: &[u8]) -> ([u8; 64], [u8; 32]) {
+    assert!(seed.len() == 32, "Seed should be 32 bytes long!");
+    
     let mut secret: [u8; 64] = {
         let mut hash_output: [u8; 64] = [0; 64];
         let mut hasher = Sha512::new();
@@ -216,6 +218,29 @@ mod tests {
         let cv_ss = curve25519(&hash, &cv_public);
 
         assert_eq!(edx_ss.to_vec(), cv_ss.to_vec());
+    }
+    
+    // realcr https://github.com/DaGenix/rust-crypto/issues/428
+    // This test will fail:
+    #[should_panic(expected = "Seed should be 32 bytes long!")]
+    #[test]
+    fn test_rust_crypto_keypair_short_seed() {
+        let seed: &[u8] = &[1,2,3,4,5];
+        let (private_key, public_key) = keypair(seed);
+    
+        let message = b"This is my message!";
+        let sig = signature(message, &private_key);
+        assert!(verify(message, &public_key, &sig));
+    }
+    // This test will pass:
+    #[test]
+    fn test_rust_crypto_keypair_long_seed() {
+        let seed: &[u8] = &[0x26, 0x27, 0xf6, 0x85, 0x97, 0x15, 0xad, 0x1d, 0xd2, 0x94, 0xdd, 0xc4, 0x76, 0x19, 0x39, 0x31, 0xf1, 0xad, 0xb5, 0x58, 0xf0, 0x93, 0x97, 0x32, 0x19, 0x2b, 0xd1, 0xc0, 0xfd, 0x16, 0x8e, 0x4e];
+        let (private_key, public_key) = keypair(seed);
+        
+        let message = b"This is my message!";
+        let sig = signature(message, &private_key);
+        assert!(verify(message, &public_key, &sig));
     }
 
     fn do_sign_verify_case(seed: [u8; 32], message: &[u8], expected_signature: [u8; 64]) {
