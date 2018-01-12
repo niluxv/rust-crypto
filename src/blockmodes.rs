@@ -682,6 +682,7 @@ impl <A: BlockEncryptor> CtrMode<A> {
     /// Create a new CTR object
     pub fn new(algo: A, ctr: Vec<u8>) -> CtrMode<A> {
         let block_size = algo.block_size();
+        assert!(ctr.len() == block_size, "Ctr length isn't equal to the blocksize!");
         CtrMode {
             algo: algo,
             ctr: ctr,
