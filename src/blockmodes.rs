@@ -587,6 +587,7 @@ impl <T: BlockEncryptor, X: PaddingProcessor> CbcEncryptor<T, X> {
     /// Create a new CBC encryption mode object
     pub fn new(algo: T, padding: X, iv: Vec<u8>) -> CbcEncryptor<T, EncPadding<X>> {
         let block_size = algo.block_size();
+        assert!(iv.len() == block_size, "IV length isn't equal to the blocksize!");
         let processor = CbcEncryptorProcessor {
             algo: algo,
             temp: repeat(0).take(block_size).collect()
