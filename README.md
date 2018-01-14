@@ -25,7 +25,7 @@ To use Rust-crypto-maintained, add the following to your Cargo.toml:
 
 ```toml
 [dependencies]
-rust-crypto-maintained = { git = "https://github.com/niluxv/rust-crypto", branch = "master" }
+rust-crypto-maintained = { git = "https://github.com/niluxv/rust-crypto", branch = "stable_0.2" }
 ```
 
 and the following to your crate root:
