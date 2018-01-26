@@ -121,8 +121,7 @@ fn scrypt_ro_mix(b: &mut [u8], v: &mut [u8], t: &mut [u8], n: usize) {
         let mask = n - 1;
         // This cast is safe since we're going to get the value mod n (which is a power of 2), so we
         // don't have to care about truncating any of the high bits off
-        let result = (read_u32_le(&x[x.len() - 64..x.len() - 60]) as usize) & mask;
-        result
+        (read_u32_le(&x[x.len() - 64..x.len() - 60]) as usize) & mask
     }
 
     let len = b.len();
