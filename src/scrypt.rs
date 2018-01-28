@@ -260,7 +260,7 @@ pub fn scrypt(password: &[u8], salt: &[u8], params: &ScryptParams, output: &mut 
  * and p parameters are encoded using 4 bytes (format 1) is used. Both formats use a 128-bit salt
  * and a 256-bit hash. The format is indicated as "rscrypt" which is short for "Rust Scrypt format."
  *
- * $rscrypt$<format>$<base64(log_n,r,p)>$<base64(salt)>$<based64(hash)>$
+ * $rscrypt$\<format>$\<base64(log_n,r,p)>$\<base64(salt)>$\<based64(hash)>$
  *
  * # Arguments
  *

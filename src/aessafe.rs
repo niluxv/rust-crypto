@@ -101,23 +101,29 @@ of the AES algorithm. The types, `T`, each implement the `AesBitValueOps` trait,
 necessary for processing a collection or bit values and the `AesOps` trait relies heavily on this
 trait to perform its operations.
 
-The `Bs4State` and `Bs2State` struct implement operations of various subfields of the full GF(2^8)
+The `Bs4State` and `Bs2State` struct implement operations of various subfields of the full GF(2<sup>8</sup>)
 finite field which allows for efficient computation of the AES S-Boxes. See [7] for details.
 
 ## References
 
 [1] - "Cache-Collision Timing Attacks Against AES". Joseph Bonneau and Ilya Mironov.
       <http://www.jbonneau.com/doc/BM06-CHES-aes_cache_timing.pdf>
+
 [2] - "Software mitigations to hedge AES against cache-based software side channel vulnerabilities".
       Ernie Brickell, et al. <http://eprint.iacr.org/2006/052.pdf>.
+
 [3] - "Cache Attacks and Countermeasures: the Case of AES (Extended Version)".
-      Dag Arne Osvik, et al. <tau.ac.il/~tromer/papers/cache.pdf>‎.
+      Dag Arne Osvik, et al. <https://www.tau.ac.il/~tromer/papers/cache.pdf>‎.
+
 [4] - "A Fast New DES Implementation in Software". Eli Biham.
       <http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.52.5429&rep=rep1&type=pdf>.
+
 [5] - "Faster and Timing-Attack Resistant AES-GCM". Emilia K ̈asper and Peter Schwabe.
       <http://www.chesworkshop.org/ches2009/presentations/01_Session_1/CHES2009_ekasper.pdf>.
+
 [6] - "FAST AES DECRYPTION". Vinit Azad.
       <http://webcache.googleusercontent.com/search?q=cache:ld_f8pSgURcJ:csusdspace.calstate.edu/bitstream/handle/10211.9/1224/Vinit_Azad_MS_Report.doc%3Fsequence%3D2+&cd=4&hl=en&ct=clnk&gl=us&client=ubuntu>.
+
 [7] - "A Very Compact Rijndael S-box". D. Canright.
       <http://www.dtic.mil/cgi-bin/GetTRDoc?AD=ADA434781>.
 */

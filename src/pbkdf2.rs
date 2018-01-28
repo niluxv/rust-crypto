@@ -121,7 +121,7 @@ pub fn pbkdf2<M: Mac>(mac: &mut M, salt: &[u8], c: u32, output: &mut [u8]) {
  * used and iteration count. The format is indicated as "rpbkdf2" which is short for "Rust PBKF2
  * format."
  *
- * $rpbkdf2$0$<base64(c)>$<base64(salt)>$<based64(hash)>$
+ * $rpbkdf2$0$\<base64(c)>$\<base64(salt)>$\<based64(hash)>$
  *
  * # Arguments
  *
