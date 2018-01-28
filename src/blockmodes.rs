@@ -19,8 +19,8 @@ use symmetriccipher::{BlockEncryptor, BlockEncryptorX8, Encryptor, BlockDecrypto
     SynchronousStreamCipher, SymmetricCipherError};
 use symmetriccipher::SymmetricCipherError::{InvalidPadding, InvalidLength};
 
-/// The BlockProcessor trait is used to implement modes that require processing complete blocks of
-/// data. The methods of this trait are called by the BlockEngine which is in charge of properly
+/// The `BlockProcessor` trait is used to implement modes that require processing complete blocks of
+/// data. The methods of this trait are called by the `BlockEngine` which is in charge of properly
 /// buffering input data.
 trait BlockProcessor {
     /// Process a block of data. The in_hist and out_hist parameters represent the input and output
@@ -28,11 +28,11 @@ trait BlockProcessor {
     fn process_block(&mut self, in_hist: &[u8], out_hist: &[u8], input: &[u8], output: &mut [u8]);
 }
 
-/// A PaddingProcessor handles adding or removing padding
+/// A `PaddingProcessor` handles adding or removing padding
 pub trait PaddingProcessor {
     /// Add padding to the last block of input data
     /// If the mode can't handle a non-full block, it signals that error by simply leaving the block
-    /// as it is which will be detected as an InvalidLength error.
+    /// as it is which will be detected as an `InvalidLength` error.
     fn pad_input<W: WriteBuffer>(&mut self, input_buffer: &mut W);
 
     /// Remove padding from the last block of output data
@@ -40,8 +40,8 @@ pub trait PaddingProcessor {
     fn strip_output<R: ReadBuffer>(&mut self, output_buffer: &mut R) -> bool;
 }
 
-/// The BlockEngine is implemented as a state machine with the following states. See comments in the
-/// BlockEngine code for more information on the states.
+/// The `BlockEngine` is implemented as a state machine with the following states. See comments in the
+/// `BlockEngine` code for more information on the states.
 #[derive(Clone, Copy)]
 enum BlockEngineState {
     FastMode,
@@ -53,28 +53,28 @@ enum BlockEngineState {
     Error(SymmetricCipherError)
 }
 
-/// BlockEngine buffers input and output data and handles sending complete block of data to the
-/// Processor object. Additionally, BlockEngine handles logic necessary to add or remove padding by
+/// `BlockEngine` buffers input and output data and handles sending complete block of data to the
+/// Processor object. Additionally, `BlockEngine` handles logic necessary to add or remove padding by
 /// calling the appropriate methods on the Processor object.
 struct BlockEngine<P, X> {
     /// The block sized expected by the Processor
     block_size: usize,
 
-    /// in_hist and out_hist keep track of data that was input to and output from the last
-    /// invocation of the process_block() method of the Processor. Depending on the mode, these may
+    /// `in_hist` and `out_hist` keep track of data that was input to and output from the last
+    /// invocation of the `process_block()` method of the Processor. Depending on the mode, these may
     /// be empty vectors if history is not needed.
     in_hist: Vec<u8>,
     out_hist: Vec<u8>,
 
     /// If some input data is supplied, but not a complete blocks worth, it is stored in this buffer
-    /// until enough arrives that it can be passed to the process_block() method of the Processor.
+    /// until enough arrives that it can be passed to the `process_block()` method of the Processor.
     in_scratch: OwnedWriteBuffer,
 
     /// If input data is processed but there isn't enough space in the output buffer to store it,
-    /// it is written into out_write_scratch. OwnedWriteBuffer's may be converted into
-    /// OwnedReaderBuffers without re-allocating, so, after being written, out_write_scratch is
-    /// turned into out_read_scratch. After that, if is written to the output as more output becomes
-    /// available. The main point is - only out_write_scratch or out_read_scratch contains a value
+    /// it is written into `out_write_scratch`. `OwnedWriteBuffer`s may be converted into
+    /// `OwnedReaderBuffer`s without re-allocating, so, after being written, `out_write_scratch` is
+    /// turned into `out_read_scratch`. After that, if is written to the output as more output becomes
+    /// available. The main point is - only `out_write_scratch` or `out_read_scratch` contains a value
     /// at any given time; never both.
     out_write_scratch: Option<OwnedWriteBuffer>,
     out_read_scratch: Option<OwnedReadBuffer>,
@@ -105,7 +105,7 @@ fn update_history(in_hist: &mut [u8], out_hist: &mut [u8], last_in: &[u8], last_
 }
 
 impl <P: BlockProcessor, X: PaddingProcessor> BlockEngine<P, X> {
-    /// Create a new BlockProcessor instance with the given processor and block_size. No history
+    /// Create a new `BlockProcessor` instance with the given processor and `block_size`. No history
     /// will be saved.
     fn new(processor: P, padding: X, block_size: usize) -> BlockEngine<P, X> {
         BlockEngine {
@@ -121,7 +121,7 @@ impl <P: BlockProcessor, X: PaddingProcessor> BlockEngine<P, X> {
         }
     }
 
-    /// Create a new BlockProcessor instance with the given processor, block_size, and initial input
+    /// Create a new `BlockProcessor` instance with the given processor, `block_size`, and initial input
     /// and output history.
     fn new_with_history(
             processor: P,
@@ -136,9 +136,9 @@ impl <P: BlockProcessor, X: PaddingProcessor> BlockEngine<P, X> {
         }
     }
 
-    /// This implements the FastMode state. Ideally, the encryption or decryption operation should
-    /// do the bulk of its work in FastMode. Significantly, FastMode avoids doing copies as much as
-    /// possible. The FastMode state does not handle the final block of data.
+    /// This implements the `FastMode` state. Ideally, the encryption or decryption operation should
+    /// do the bulk of its work in `FastMode`. Significantly, `FastMode` avoids doing copies as much as
+    /// possible. The `FastMode` state does not handle the final block of data.
     fn fast_mode<R: ReadBuffer, W: WriteBuffer>(
             &mut self,
             input: &mut R,
@@ -211,7 +211,7 @@ impl <P: BlockProcessor, X: PaddingProcessor> BlockEngine<P, X> {
         }
     }
 
-    /// This method implements the BlockEngine state machine.
+    /// This method implements the `BlockEngine` state machine.
     fn process<R: ReadBuffer, W: WriteBuffer>(
             &mut self,
             input: &mut R,
@@ -460,7 +460,7 @@ impl PaddingProcessor for PkcsPadding {
     }
 }
 
-/// Wraps a PaddingProcessor so that only pad_input() will actually be called.
+/// Wraps a `PaddingProcessor` so that only `pad_input()` will actually be called.
 pub struct EncPadding<X> {
     padding: X
 }
@@ -474,7 +474,7 @@ impl <X: PaddingProcessor> PaddingProcessor for EncPadding<X> {
     fn strip_output<R: ReadBuffer>(&mut self, _: &mut R) -> bool { true }
 }
 
-/// Wraps a PaddingProcessor so that only strip_output() will actually be called.
+/// Wraps a `PaddingProcessor` so that only `strip_output()` will actually be called.
 pub struct DecPadding<X> {
     padding: X
 }

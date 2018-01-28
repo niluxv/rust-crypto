@@ -35,7 +35,7 @@
  * as its parent.
  *
  * However, this appears not to be possible in Rust, due to
- *     https://github.com/rust-lang/rust/issues/16799
+ *     <https://github.com/rust-lang/rust/issues/16799>
  * The reason is that Rust's process management all happens through its
  * stdlib runtime, which explicitly does not support forking, so it provides
  * no mechanism with which to detect forks.
@@ -398,7 +398,7 @@ mod tests {
         let mut output = [0; 100];
         // Expected output from experiments with pycryto
         // Note that this does not match the results for the Go implementation
-        // as described at http://www.seehuhn.de/pages/fortuna ... I believe
+        // as described at <http://www.seehuhn.de/pages/fortuna> ... I believe
         // this is because the author there is reusing some Fortuna state from
         // the previous test. These results agree with pycrypto on a fresh slate
         let mut f = Fortuna::new_unseeded();

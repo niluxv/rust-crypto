@@ -22,7 +22,7 @@ pub enum KeySize {
 }
 
 // aes in electronic codebook mode (ecb) encryption
-/// Get the best implementation of an EcbEncryptor
+/// Get the best implementation of an `EcbEncryptor`
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub fn ecb_encryptor<X: PaddingProcessor + Send + 'static>(
         key_size: KeySize,
@@ -51,7 +51,7 @@ pub fn ecb_encryptor<X: PaddingProcessor + Send + 'static>(
     }
 }
 
-/// Get the best implementation of an EcbEncryptor
+/// Get the best implementation of an `EcbEncryptor`
 #[cfg(all(not(target_arch = "x86"), not(target_arch = "x86_64")))]
 pub fn ecb_encryptor<X: PaddingProcessor + Send + 'static>(
         key_size: KeySize,
@@ -74,7 +74,7 @@ pub fn ecb_encryptor<X: PaddingProcessor + Send + 'static>(
 }
 
 // aes in electronic codebook mode (ecb) decryption
-/// Get the best implementation of an EcbDecryptor
+/// Get the best implementation of an `EcbDecryptor`
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub fn ecb_decryptor<X: PaddingProcessor + Send + 'static>(
         key_size: KeySize,
@@ -101,7 +101,7 @@ pub fn ecb_decryptor<X: PaddingProcessor + Send + 'static>(
     }
 }
 
-/// Get the best implementation of an EcbDecryptor
+/// Get the best implementation of an `EcbDecryptor`
 #[cfg(all(not(target_arch = "x86"), not(target_arch = "x86_64")))]
 pub fn ecb_decryptor<X: PaddingProcessor + Send + 'static>(
         key_size: KeySize,
@@ -124,7 +124,7 @@ pub fn ecb_decryptor<X: PaddingProcessor + Send + 'static>(
 }
 
 // aes in cipher block chaining mode (cbc) encryption
-/// Get the best implementation of a CbcEncryptor
+/// Get the best implementation of a `CbcEncryptor`
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub fn cbc_encryptor<X: PaddingProcessor + Send + 'static>(
         key_size: KeySize,
@@ -152,7 +152,7 @@ pub fn cbc_encryptor<X: PaddingProcessor + Send + 'static>(
     }
 }
 
-/// Get the best implementation of a CbcEncryptor
+/// Get the best implementation of a `CbcEncryptor`
 #[cfg(all(not(target_arch = "x86"), not(target_arch = "x86_64")))]
 pub fn cbc_encryptor<X: PaddingProcessor + Send + 'static>(
         key_size: KeySize,
@@ -176,7 +176,7 @@ pub fn cbc_encryptor<X: PaddingProcessor + Send + 'static>(
 }
 
 // aes in cipher block chaining mode (cbc) decryption
-/// Get the best implementation of a CbcDecryptor
+/// Get the best implementation of a `CbcDecryptor`
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub fn cbc_decryptor<X: PaddingProcessor + Send + 'static>(
         key_size: KeySize,
@@ -204,7 +204,7 @@ pub fn cbc_decryptor<X: PaddingProcessor + Send + 'static>(
     }
 }
 
-/// Get the best implementation of a CbcDecryptor
+/// Get the best implementation of a `CbcDecryptor`
 #[cfg(all(not(target_arch = "x86"), not(target_arch = "x86_64")))]
 pub fn cbc_decryptor<X: PaddingProcessor + Send + 'static>(
         key_size: KeySize,

@@ -9,7 +9,7 @@
  *
  * # References
  * [1] - C. Percival. Stronger Key Derivation Via Sequential Memory-Hard Functions.
- *       http://www.tarsnap.com/scrypt/scrypt.pdf
+ *       <http://www.tarsnap.com/scrypt/scrypt.pdf>
  */
 
 use std;
@@ -93,8 +93,8 @@ fn xor(x: &[u8], y: &[u8], output: &mut [u8]) {
 }
 
 // Execute the BlockMix operation
-// input - the input vector. The length must be a multiple of 128.
-// output - the output vector. Must be the same length as input.
+// `input` - the input vector. The length must be a multiple of 128.
+// `output` - the output vector. Must be the same length as input.
 fn scrypt_block_mix(input: &[u8], output: &mut [u8]) {
     let mut x = [0u8; 64];
     copy_memory(&input[input.len() - 64..], &mut x);
@@ -110,10 +110,10 @@ fn scrypt_block_mix(input: &[u8], output: &mut [u8]) {
 }
 
 // Execute the ROMix operation in-place.
-// b - the data to operate on
-// v - a temporary variable to store the vector V
-// t - a temporary variable to store the result of the xor
-// n - the scrypt parameter N
+// `b` - the data to operate on
+// `v` - a temporary variable to store the vector V
+// `t` - a temporary variable to store the result of the xor
+// `n` - the scrypt parameter N
 fn scrypt_ro_mix(b: &mut [u8], v: &mut [u8], t: &mut [u8], n: usize) {
     fn integerify(x: &[u8], n: usize) -> usize {
         // n is a power of 2, so n - 1 gives us a bitmask that we can use to perform a calculation
@@ -150,13 +150,13 @@ pub struct ScryptParams {
 
 impl ScryptParams {
     /**
-     * Create a new instance of ScryptParams.
+     * Create a new instance of `ScryptParams`.
      *
      * # Arguments
      *
-     * * log_n - The log2 of the Scrypt parameter N
-     * * r - The Scrypt parameter r
-     * * p - The Scrypt parameter p
+     * * `log_n` - The log2 of the Scrypt parameter N
+     * * `r` - The Scrypt parameter r
+     * * `p` - The Scrypt parameter p
      *
      */
     pub fn new(log_n: u8, r: u32, p: u32) -> ScryptParams {
@@ -213,10 +213,10 @@ impl ScryptParams {
  *
  * # Arguments
  *
- * * password - The password to process as a byte vector
- * * salt - The salt value to use as a byte vector
- * * params - The ScryptParams to use
- * * output - The resulting derived key is returned in this byte vector.
+ * * `password` - The password to process as a byte vector
+ * * `salt` - The salt value to use as a byte vector
+ * * `params` - The `ScryptParams` to use
+ * * `output` - The resulting derived key is returned in this byte vector.
  *
  */
 pub fn scrypt(password: &[u8], salt: &[u8], params: &ScryptParams, output: &mut [u8]) {
@@ -247,9 +247,9 @@ pub fn scrypt(password: &[u8], salt: &[u8], params: &ScryptParams, output: &mut 
 }
 
 /**
- * scrypt_simple is a helper function that should be sufficient for the majority of cases where
+ * `scrypt_simple` is a helper function that should be sufficient for the majority of cases where
  * an application needs to use Scrypt to hash a password for storage. The result is a String that
- * contains the parameters used as part of its encoding. The scrypt_check function may be used on
+ * contains the parameters used as part of its encoding. The `scrypt_check` function may be used on
  * a password to check if it is equal to a hashed value.
  *
  * # Format
@@ -264,8 +264,8 @@ pub fn scrypt(password: &[u8], salt: &[u8], params: &ScryptParams, output: &mut 
  *
  * # Arguments
  *
- * * password - The password to process as a str
- * * params - The ScryptParams to use
+ * * `password` - The password to process as a str
+ * * `params` - The `ScryptParams` to use
  *
  */
 pub fn scrypt_simple(password: &str, params: &ScryptParams) -> io::Result<String> {
@@ -305,13 +305,13 @@ pub fn scrypt_simple(password: &str, params: &ScryptParams) -> io::Result<String
 }
 
 /**
- * scrypt_check compares a password against the result of a previous call to scrypt_simple and
+ * `scrypt_check` compares a password against the result of a previous call to `scrypt_simple` and
  * returns true if the passed in password hashes to the same value.
  *
  * # Arguments
  *
- * * password - The password to process as a str
- * * hashed_value - A string representing a hashed password returned by scrypt_simple()
+ * * `password` - The password to process as a str
+ * * `hashed_value` - A string representing a hashed password returned by `scrypt_simple()`
  *
  */
 pub fn scrypt_check(password: &str, hashed_value: &str) -> Result<bool, &'static str> {
