@@ -152,7 +152,7 @@ fn update(state: &mut Gf128, len: &mut usize, data: &[u8], srest: &mut Option<[u
         state.add_and_mul(x, hs);
     }
 
-    if rest.len() != 0 {
+    if !rest.is_empty() {
         let mut tmp = [0; 16];
         copy_memory(rest, &mut tmp);
         *srest = Some(tmp);

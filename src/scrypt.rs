@@ -222,7 +222,7 @@ impl ScryptParams {
 pub fn scrypt(password: &[u8], salt: &[u8], params: &ScryptParams, output: &mut [u8]) {
     // This check required by Scrypt:
     // check output.len() > 0 && output.len() <= (2^32 - 1) * 32
-    assert!(output.len() > 0);
+    assert!(!output.is_empty());
     assert!(output.len() / 32 <= 0xffffffff);
 
     // The checks in the ScryptParams constructor guarantee that the following is safe:

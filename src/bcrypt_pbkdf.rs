@@ -38,10 +38,10 @@ fn bcrypt_hash(hpass: &[u8], hsalt: &[u8], output: &mut [u8; 32]) {
 pub fn bcrypt_pbkdf(password: &[u8], salt: &[u8], rounds: u32, output: &mut [u8]) {
     let mut hpass = [0u8; 64];
 
-    assert!(password.len() > 0);
-    assert!(salt.len() > 0);
+    assert!(!password.is_empty());
+    assert!(!salt.is_empty());
     assert!(rounds > 0);
-    assert!(output.len() > 0);
+    assert!(!output.is_empty());
     assert!(output.len() <= 1024);
 
     let nblocks = (output.len() + 31) / 32;

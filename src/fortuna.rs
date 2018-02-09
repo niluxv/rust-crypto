@@ -198,7 +198,7 @@ impl Fortuna {
     pub fn add_random_event(&mut self, s: u8, i: usize, e: &[u8]) {
         assert!(i <= NUM_POOLS);
         // These restrictions (and `s` in [0, 255]) are part of the Fortuna spec.
-        assert!(e.len() > 0);
+        assert!(!e.is_empty());
         assert!(e.len() <= 32);
         (&mut self.pool[i]).input(&[s]);
         (&mut self.pool[i]).input(&[e.len() as u8]);
