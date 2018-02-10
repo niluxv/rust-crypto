@@ -28,7 +28,7 @@ impl Hc128 {
         assert!(key.len() == 16);
         assert!(nonce.len() == 16);
         let mut hc128 = Hc128 { p: [0; 512], q: [0; 512], cnt: 0, output: [0; 4], output_index: 0 };
-        hc128.init(&key, &nonce);
+        hc128.init(key, nonce);
 
         hc128
     }
