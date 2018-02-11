@@ -4,6 +4,9 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+use std;
+use std::fmt::{Display, Formatter};
+use std::error::Error;
 use buffer::{BufferResult, RefReadBuffer, RefWriteBuffer};
 use cryptoutil::symm_enc_or_dec;
 
@@ -31,6 +34,25 @@ pub trait BlockDecryptorX8 {
 pub enum SymmetricCipherError {
     InvalidLength,
     InvalidPadding
+}
+
+impl Display for SymmetricCipherError {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
+        //match *self {
+        //    SymmetricCipherError::InvalidLength => "padding output is not a multiple of blocksize",
+        //    SymmetricCipherError::InvalidPadding => "stripping the padding wasn't succesfull"
+        //}
+        Display::fmt(self.description(), f)
+    }
+}
+
+impl Error for SymmetricCipherError {
+    fn description(&self) -> &str {
+        match *self {
+            SymmetricCipherError::InvalidLength => "padding output is not a multiple of blocksize",
+            SymmetricCipherError::InvalidPadding => "stripping the padding wasn't succesfull"
+        }
+    }
 }
 
 pub trait Encryptor {
@@ -66,5 +88,18 @@ impl Decryptor for Box<SynchronousStreamCipher + 'static> {
     fn decrypt(&mut self, input: &mut RefReadBuffer, output: &mut RefWriteBuffer, _: bool)
             -> Result<BufferResult, SymmetricCipherError> {
         symm_enc_or_dec(self, input, output)
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[test]
+    fn test_symcipher_error() {
+        let error1 = SymmetricCipherError::InvalidLength;
+        let error2 = SymmetricCipherError::InvalidPadding;
+        println!("Testing {} and {}.", error1, error2);
+        println!("Some error occured: {}", error1.description());
+        println!("Another error occured: {}", error2.description());
     }
 }
