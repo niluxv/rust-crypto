@@ -167,8 +167,8 @@ impl Sosemanuk {
         assert!(key.len() <= 32);
         assert!(nonce.len() <= 16);
 
-        key_setup(&key, &mut sosemanuk.subkeys);
-        iv_setup(&nonce, &mut sosemanuk.subkeys, &mut sosemanuk.lfsr, &mut sosemanuk.fsm_r);
+        key_setup(key, &mut sosemanuk.subkeys);
+        iv_setup(nonce, &mut sosemanuk.subkeys, &mut sosemanuk.lfsr, &mut sosemanuk.fsm_r);
 
         sosemanuk
     }
@@ -599,7 +599,7 @@ impl Sosemanuk {
 fn key_setup(key : &[u8], subkeys : &mut[u32; 100]) {
     let mut full_key : [u8; 32] = [0; 32];
     if key.len() < 32 {
-        copy_memory(&key, &mut full_key[0..key.len()]);
+        copy_memory(key, &mut full_key[0..key.len()]);
         full_key[key.len()] = 0x01;
     } else {
         copy_memory(&key[0..32], &mut full_key[0..32]);
@@ -1489,7 +1489,7 @@ fn key_setup(key : &[u8], subkeys : &mut[u32; 100]) {
 fn iv_setup(iv : &[u8], subkeys : &mut[u32; 100], lfsr : &mut[u32; 10], fsm_r : &mut[u32; 2]) {
     let mut nonce : [u8; 16] = [0; 16];
     if iv.len() < 16 {
-        copy_memory(&iv, &mut nonce[0..iv.len()]);
+        copy_memory(iv, &mut nonce[0..iv.len()]);
     } else {
         copy_memory(&iv[0..16], &mut nonce[0..16]);
     }

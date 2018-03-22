@@ -4,16 +4,17 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-/// This is an implementaiton of GHASH as used in GCM [1].
-/// It is defined as GHASH(H, A, C), where H is a MAC key, A is authenticated data,
-/// and C is the ciphertext. GHASH can be used as a keyed MAC, if C is left empty.
-///
-/// In order to ensure constant time computation it uses the approach described in [2] section 5.2.
-///
-/// [1] - "The Galois/Counter Mode of Operation (GCM)" - David A. McGrew and John Viega
-///       <http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf>
-/// [2] - "Faster and Timing-Attack Resistant AES-GCM" - Emilia Käsper and Peter Schwabe
-///       <http://cryptojedi.org/papers/aesbs-20090616.pdf>
+//! This is an implementaiton of GHASH as used in GCM [1].
+//! It is defined as GHASH(H, A, C), where H is a MAC key, A is authenticated data,
+//! and C is the ciphertext. GHASH can be used as a keyed MAC, if C is left empty.
+//!
+//! In order to ensure constant time computation it uses the approach described in [2] section 5.2.
+//!
+//! [1] - "The Galois/Counter Mode of Operation (GCM)" - David A. McGrew and John Viega
+//!       <http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf>
+//!
+//! [2] - "Faster and Timing-Attack Resistant AES-GCM" - Emilia Käsper and Peter Schwabe
+//!       <http://cryptojedi.org/papers/aesbs-20090616.pdf>
 
 use std::ops::BitXor;
 use std::mem;
@@ -151,7 +152,7 @@ fn update(state: &mut Gf128, len: &mut usize, data: &[u8], srest: &mut Option<[u
         state.add_and_mul(x, hs);
     }
 
-    if rest.len() != 0 {
+    if !rest.is_empty() {
         let mut tmp = [0; 16];
         copy_memory(rest, &mut tmp);
         *srest = Some(tmp);

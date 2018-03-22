@@ -89,38 +89,43 @@ data that is combined into the AES state by the AddRoundKey step as part of each
 decryption round. Processing the round key can be expensive, so this is done before encryption or
 decryption. Before encrypting or decrypting data, the data to be processed by be Bit Sliced into 8
 seperate variables where each variable holds equivalent bytes from the state. This Bit Sliced state
-is stored as a Bs8State<T>, where T is the type that stores each set of bits. The first
+is stored as a `Bs8State<T>`, where `T` is the type that stores each set of bits. The first
 implementation stores these bits in a u32 which permits up to 8 * 32 = 1024 bits of data to be
 processed at once. This implementation only processes a single block at a time, so, in reality, only
 512 bits are processed at once and the remaining 512 bits of the variables are unused. The 2nd
 implementation uses u32x4s - vectors of 4 u32s. Thus, we can process 8 * 128 = 4096 bits at once,
 which corresponds exactly to 8 blocks.
 
-The Bs8State struct implements the AesOps trait, which contains methods for each of the 4 main steps
-of the AES algorithm. The types, T, each implement the AesBitValueOps trait, which containts methods
-necessary for processing a collection or bit values and the AesOps trait relies heavily on this
+The `Bs8State` struct implements the `AesOps` trait, which contains methods for each of the 4 main steps
+of the AES algorithm. The types, `T`, each implement the `AesBitValueOps` trait, which containts methods
+necessary for processing a collection or bit values and the `AesOps` trait relies heavily on this
 trait to perform its operations.
 
-The Bs4State and Bs2State struct implement operations of various subfields of the full GF(2^8)
+The `Bs4State` and `Bs2State` struct implement operations of various subfields of the full GF(2<sup>8</sup>)
 finite field which allows for efficient computation of the AES S-Boxes. See [7] for details.
 
 ## References
 
 [1] - "Cache-Collision Timing Attacks Against AES". Joseph Bonneau and Ilya Mironov.
-      http://www.jbonneau.com/doc/BM06-CHES-aes_cache_timing.pdf
+      <http://www.jbonneau.com/doc/BM06-CHES-aes_cache_timing.pdf>
+
 [2] - "Software mitigations to hedge AES against cache-based software side channel vulnerabilities".
-      Ernie Brickell, et al. http://eprint.iacr.org/2006/052.pdf.
+      Ernie Brickell, et al. <http://eprint.iacr.org/2006/052.pdf>.
+
 [3] - "Cache Attacks and Countermeasures: the Case of AES (Extended Version)".
-      Dag Arne Osvik, et al. tau.ac.il/~tromer/papers/cache.pdf‎.
+      Dag Arne Osvik, et al. <https://www.tau.ac.il/~tromer/papers/cache.pdf>‎.
+
 [4] - "A Fast New DES Implementation in Software". Eli Biham.
-      http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.52.5429&rep=rep1&type=pdf.
+      <http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.52.5429&rep=rep1&type=pdf>.
+
 [5] - "Faster and Timing-Attack Resistant AES-GCM". Emilia K ̈asper and Peter Schwabe.
-      http://www.chesworkshop.org/ches2009/presentations/01_Session_1/CHES2009_ekasper.pdf.
-[6] - "FAST AES DECRYPTION". Vinit Azad. http://webcache.googleusercontent.com/
-      search?q=cache:ld_f8pSgURcJ:csusdspace.calstate.edu/bitstream/handle/10211.9/1224/
-      Vinit_Azad_MS_Report.doc%3Fsequence%3D2+&cd=4&hl=en&ct=clnk&gl=us&client=ubuntu.
+      <http://www.chesworkshop.org/ches2009/presentations/01_Session_1/CHES2009_ekasper.pdf>.
+
+[6] - "FAST AES DECRYPTION". Vinit Azad.
+      <http://webcache.googleusercontent.com/search?q=cache:ld_f8pSgURcJ:csusdspace.calstate.edu/bitstream/handle/10211.9/1224/Vinit_Azad_MS_Report.doc%3Fsequence%3D2+&cd=4&hl=en&ct=clnk&gl=us&client=ubuntu>.
+
 [7] - "A Very Compact Rijndael S-box". D. Canright.
-      http://www.dtic.mil/cgi-bin/GetTRDoc?AD=ADA434781.
+      <http://www.dtic.mil/cgi-bin/GetTRDoc?AD=ADA434781>.
 */
 
 use std::ops::{BitAnd, BitXor, Not};

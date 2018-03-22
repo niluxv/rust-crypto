@@ -187,7 +187,7 @@ impl Blake2s {
 
     pub fn new_keyed(outlen: usize, key: &[u8] ) -> Blake2s {
         assert!(outlen > 0 && outlen <= BLAKE2S_OUTBYTES);
-        assert!(key.len() > 0 && key.len() <= BLAKE2S_KEYBYTES);
+        assert!(!key.is_empty() && key.len() <= BLAKE2S_KEYBYTES);
 
         let param = Blake2sParam {
             digest_length: outlen as u8,
@@ -242,7 +242,7 @@ impl Blake2s {
     }
 
     fn update( &mut self, mut input: &[u8] ) {
-        while input.len() > 0 {
+        while !input.is_empty() {
             let left = self.buflen;
             let fill = 2 * BLAKE2S_BLOCKBYTES - left;
 
@@ -319,7 +319,7 @@ impl Blake2s {
     }
 
     pub fn blake2s(out: &mut[u8], input: &[u8], key: &[u8]) {
-        let mut hasher : Blake2s = if key.len() > 0 { Blake2s::new_keyed(out.len(), key) } else { Blake2s::new(out.len()) };
+        let mut hasher : Blake2s = if !key.is_empty() { Blake2s::new_keyed(out.len(), key) } else { Blake2s::new(out.len()) };
 
         hasher.update(input);
         hasher.finalize(out);

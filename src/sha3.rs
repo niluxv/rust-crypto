@@ -289,7 +289,7 @@ impl Sha3 {
         };
 
         fn set_domain_sep(out_len: usize, buf: &mut [u8]) {
-            assert!(buf.len() > 0);
+            assert!(!buf.is_empty());
             if out_len != 0 {
                 // 01...
                 buf[0] &= 0xfe;

@@ -112,12 +112,7 @@ impl Salsa20 {
         //  * Key (x1, x2, x3, x4, x11, x12, x13, x14)
         //  * Input (x6, x7, x8, x9)
 
-        let key_tail; // (x11, x12, x13, x14)
-        if key.len() == 16 {
-            key_tail = key;
-        } else {
-            key_tail = &key[16..32];
-        }
+        let key_tail = if (key.len() == 16) {key} else {&key[16..32]}; // (x11, x12, x13, x14)
 
         let x8; let x9; // (x8, x9)
         if nonce.len() == 16 {

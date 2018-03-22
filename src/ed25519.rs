@@ -132,7 +132,7 @@ pub fn verify(message: &[u8], public_key: &[u8], signature: &[u8]) -> bool {
 }
 
 pub fn exchange(public_key: &[u8], private_key: &[u8]) -> [u8; 32] {
-    let ed_y = Fe::from_bytes(&public_key);
+    let ed_y = Fe::from_bytes(public_key);
     // Produce public key in Montgomery form.
     let mont_x = edwards_to_montgomery_x(ed_y);
 

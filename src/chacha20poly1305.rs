@@ -48,7 +48,7 @@ impl ChaCha20Poly1305 {
 impl AeadEncryptor for ChaCha20Poly1305 {
     fn encrypt(&mut self, input: &[u8], output: &mut [u8], out_tag: &mut [u8]) {
         assert!(input.len() == output.len());
-        assert!(self.finished == false);
+        assert!(!self.finished);
         self.cipher.process(input, output);
         self.data_len += input.len();
         self.mac.input(output);
@@ -63,7 +63,7 @@ impl AeadEncryptor for ChaCha20Poly1305 {
 impl AeadDecryptor for ChaCha20Poly1305 {
     fn decrypt(&mut self, input: &[u8], output: &mut [u8], tag: &[u8]) -> bool {
         assert!(input.len() == output.len());
-        assert!(self.finished == false);
+        assert!(!self.finished);
 
         self.finished = true;
 

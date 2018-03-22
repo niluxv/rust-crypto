@@ -6,7 +6,7 @@
 
 /*!
  * This module implements the PBKDF2 Key Derivation Function as specified by
- * http://tools.ietf.org/html/rfc2898.
+ * <http://tools.ietf.org/html/rfc2898>.
  */
 
 use std::iter::repeat;
@@ -24,12 +24,12 @@ use sha2::Sha256;
 use util::fixed_time_eq;
 
 // Calculate a block of the output of size equal to the output_bytes of the underlying Mac function
-// mac - The Mac function to use
-// salt - the salt value to use
-// c - the iteration count
-// idx - the 1 based index of the block
-// scratch - a temporary variable the same length as the block
-// block - the block of the output to calculate
+// `mac` - The Mac function to use
+// `salt` - the salt value to use
+// `c` - the iteration count
+// `idx` - the 1 based index of the block
+// `scratch` - a temporary variable the same length as the block
+// `block` - the block of the output to calculate
 fn calculate_block<M: Mac>(
         mac: &mut M,
         salt: &[u8],
@@ -74,11 +74,11 @@ fn calculate_block<M: Mac>(
  * should consider using that function instead.
  *
  * # Arguments
- * * mac - The Pseudo Random Function to use.
- * * salt - The salt value to use.
- * * c - The iteration count. Users should carefully determine this value as it is the primary
+ * * `mac` - The Pseudo Random Function to use.
+ * * `salt` - The salt value to use.
+ * * `c` - The iteration count. Users should carefully determine this value as it is the primary
  *       factor in determining the security of the derived key.
- * * output - The output buffer to fill with the derived key value.
+ * * `output` - The output buffer to fill with the derived key value.
  *
  */
 pub fn pbkdf2<M: Mac>(mac: &mut M, salt: &[u8], c: u32, output: &mut [u8]) {
@@ -110,9 +110,9 @@ pub fn pbkdf2<M: Mac>(mac: &mut M, salt: &[u8], c: u32, output: &mut [u8]) {
 }
 
 /**
- * pbkdf2_simple is a helper function that should be sufficient for the majority of cases where
+ * `pbkdf2_simple` is a helper function that should be sufficient for the majority of cases where
  * an application needs to use PBKDF2 to hash a password for storage. The result is a String that
- * contains the parameters used as part of its encoding. The pbkdf2_check function may be used on
+ * contains the parameters used as part of its encoding. The `pbkdf2_check` function may be used on
  * a password to check if it is equal to a hashed value.
  *
  * # Format
@@ -121,12 +121,12 @@ pub fn pbkdf2<M: Mac>(mac: &mut M, salt: &[u8], c: u32, output: &mut [u8]) {
  * used and iteration count. The format is indicated as "rpbkdf2" which is short for "Rust PBKF2
  * format."
  *
- * $rpbkdf2$0$<base64(c)>$<base64(salt)>$<based64(hash)>$
+ * $rpbkdf2$0$\<base64(c)>$\<base64(salt)>$\<based64(hash)>$
  *
  * # Arguments
  *
- * * password - The password to process as a str
- * * c - The iteration count
+ * * `password` - The password to process as a str
+ * * `c` - The iteration count
  *
  */
 pub fn pbkdf2_simple(password: &str, c: u32) -> io::Result<String> {
@@ -156,13 +156,13 @@ pub fn pbkdf2_simple(password: &str, c: u32) -> io::Result<String> {
 }
 
 /**
- * pbkdf2_check compares a password against the result of a previous call to pbkdf2_simple and
+ * `pbkdf2_check` compares a password against the result of a previous call to `pbkdf2_simple` and
  * returns true if the passed in password hashes to the same value.
  *
  * # Arguments
  *
- * * password - The password to process as a str
- * * hashed_value - A string representing a hashed password returned by pbkdf2_simple()
+ * * `password` - The password to process as a str
+ * * `hashed_value` - A string representing a hashed password returned by `pbkdf2_simple()`
  *
  */
 pub fn pbkdf2_check(password: &str, hashed_value: &str) -> Result<bool, &'static str> {
@@ -262,7 +262,7 @@ mod test {
         expected: Vec<u8>
     }
 
-    // Test vectors from http://tools.ietf.org/html/rfc6070. The 4th test vector is omitted because
+    // Test vectors from <http://tools.ietf.org/html/rfc6070>. The 4th test vector is omitted because
     // it takes too long to run.
 
     fn tests() -> Vec<Test> {
