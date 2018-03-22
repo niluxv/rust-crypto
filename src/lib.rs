@@ -70,6 +70,8 @@ Rust-crypto-maintained supports the same algorithems as Rust-Crypto. Currently s
 
 #![allow(unused_parens)]
 
+#![deny(unsafe_code)] // unsafe code is allowed on a per module basis
+
 #![cfg_attr(feature = "with-bench", feature(test))]
 
 extern crate rand;
@@ -93,12 +95,15 @@ pub mod blowfish;
 pub mod buffer;
 pub mod chacha20;
 pub mod chacha20poly1305;
+#[allow(unsafe_code)]
 mod cryptoutil;
 pub mod curve25519;
 pub mod digest;
 pub mod ed25519;
 pub mod fortuna;
+#[allow(unsafe_code)]
 pub mod ghash;
+#[allow(unsafe_code)]
 pub mod hc128;
 pub mod hmac;
 pub mod hkdf;
@@ -117,8 +122,11 @@ mod simd;
 pub mod sosemanuk;
 mod step_by;
 pub mod symmetriccipher;
+#[allow(unsafe_code)]
 pub mod util;
+#[allow(unsafe_code)]
 pub mod whirlpool;
 
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+#[allow(unsafe_code)]
 pub mod aesni;
