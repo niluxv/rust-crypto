@@ -4,6 +4,9 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+//! This public module defines functions to create a new instance of AES in one of the blockmodes.
+//! If the aes-ni instructions are available it will use the `aesni` module, otherwise the `aessafe` module.
+
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 use aesni;
 
@@ -29,7 +32,8 @@ pub fn ecb_encryptor<X: PaddingProcessor + Send + 'static>(
         key: &[u8],
         padding: X) -> Box<Encryptor> {
     if util::supports_aesni() {
-        // use the aes instruction set (aes-ni) in new x86(_64) processors (aesni module defined in the file 'aesni.rs' and the files 'aesni_helpers.c' and 'aesni_helpers.asm')
+        // use the aes instruction set (aes-ni) in new x86(_64) processors
+        // (aesni module defined in the file 'aesni.rs' and the files 'aesni_helpers.c' and 'aesni_helpers.asm')
         let aes_enc = aesni::AesNiEncryptor::new(key_size, key);
         let enc = Box::new(EcbEncryptor::new(aes_enc, padding));
         enc

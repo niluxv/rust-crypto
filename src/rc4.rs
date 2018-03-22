@@ -5,8 +5,8 @@
 // except according to those terms.
 
 /*!
- * An implementation of the RC4 (also sometimes called ARC4) stream cipher. THIS IMPLEMENTATION IS
- * NOT A FIXED TIME IMPLEMENTATION.
+ * An implementation of the RC4 (also sometimes called ARC4) stream cipher.
+ * THIS IMPLEMENTATION IS NOT A FIXED TIME IMPLEMENTATION! DO NOT USE!
  */
 
 use buffer::{BufferResult, RefReadBuffer, RefWriteBuffer};
