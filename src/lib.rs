@@ -72,6 +72,8 @@ Rust-crypto-maintained supports the same algorithems as Rust-Crypto. Currently s
 
 #![deny(unsafe_code)] // unsafe code is allowed on a per module basis
 
+#![forbid(future_incompatible)]
+
 #![cfg_attr(feature = "with-bench", feature(test))]
 
 extern crate rand;
