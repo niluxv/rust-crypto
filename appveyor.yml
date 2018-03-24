@@ -65,10 +65,10 @@ test_script:
   - cargo test
 
 for:
--
-  branches:
-    - /stable_[:digit:]+[.][:digit:]+/
-    - /test_rc_.+/
+- branches:
+    only:
+      - /stable_[:digit:]+[.][:digit:]+/
+      - /test_rc_.+/
 
   test_script:
     - cargo clean
