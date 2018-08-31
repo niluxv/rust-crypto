@@ -133,7 +133,6 @@ use std::default::Default;
 
 use cryptoutil::{read_u32v_le, write_u32_le};
 use simd::u32x4;
-use step_by::RangeExt;
 use symmetriccipher::{BlockEncryptor, BlockEncryptorX8, BlockDecryptor, BlockDecryptorX8};
 
 const U32X4_0: u32x4 = u32x4(0, 0, 0, 0);
@@ -372,7 +371,7 @@ fn create_round_keys(key: &[u8], key_type: KeyType, round_keys: &mut [[u32; 4]])
 
     // The key is copied directly into the first few round keys
     let mut j = 0;
-    for i in (0..key.len()).step_up(4) {
+    for i in (0..key.len()).step_by(4) {
         round_keys[j / 4][j % 4] =
             (key[i] as u32) |
             ((key[i+1] as u32) << 8) |

@@ -122,7 +122,6 @@ pub mod sha2;
 pub mod sha3;
 mod simd;
 pub mod sosemanuk;
-mod step_by;
 pub mod threefish;
 pub mod symmetriccipher;
 #[allow(unsafe_code)]
