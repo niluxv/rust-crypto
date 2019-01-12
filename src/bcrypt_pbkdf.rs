@@ -4,10 +4,10 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use blowfish::Blowfish;
-use cryptoutil::{read_u32v_be, write_u32_be, write_u32_le};
-use sha2::Sha512;
-use digest::Digest;
+use crate::blowfish::Blowfish;
+use crate::cryptoutil::{read_u32v_be, write_u32_be, write_u32_le};
+use crate::sha2::Sha512;
+use crate::digest::Digest;
 
 fn bcrypt_hash(hpass: &[u8], hsalt: &[u8], output: &mut [u8; 32]) {
     let mut bf = Blowfish::init_state();
@@ -87,7 +87,7 @@ pub fn bcrypt_pbkdf(password: &[u8], salt: &[u8], rounds: u32, output: &mut [u8]
 mod test {
     use std::iter::repeat;
 
-    use bcrypt_pbkdf::{bcrypt_pbkdf, bcrypt_hash};
+    use crate::bcrypt_pbkdf::{bcrypt_pbkdf, bcrypt_hash};
 
     #[test]
     fn test_bcrypt_hash() {

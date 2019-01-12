@@ -4,14 +4,14 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use aead::{AeadEncryptor,AeadDecryptor};
+use crate::aead::{AeadEncryptor,AeadDecryptor};
 
-use chacha20::ChaCha20;
-use symmetriccipher::SynchronousStreamCipher;
-use poly1305::Poly1305;
-use mac::Mac;
-use cryptoutil::{write_u64_le};
-use util::fixed_time_eq;
+use crate::chacha20::ChaCha20;
+use crate::symmetriccipher::SynchronousStreamCipher;
+use crate::poly1305::Poly1305;
+use crate::mac::Mac;
+use crate::cryptoutil::{write_u64_le};
+use crate::util::fixed_time_eq;
 #[derive(Clone, Copy)]
 pub struct ChaCha20Poly1305 {
     cipher  : ChaCha20,
@@ -89,8 +89,8 @@ impl AeadDecryptor for ChaCha20Poly1305 {
 mod test {
   use std::iter::repeat;
 
-  use chacha20poly1305::ChaCha20Poly1305;
-  use aead::{AeadEncryptor,AeadDecryptor};
+  use crate::chacha20poly1305::ChaCha20Poly1305;
+  use crate::aead::{AeadEncryptor,AeadDecryptor};
   struct TestVector {
     key:   [u8; 32],
     nonce: [u8; 8],

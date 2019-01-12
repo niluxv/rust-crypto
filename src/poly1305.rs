@@ -9,8 +9,8 @@
 
 use std::cmp::min;
 
-use cryptoutil::{read_u32_le, write_u32_le};
-use mac::{Mac, MacResult};
+use crate::cryptoutil::{read_u32_le, write_u32_le};
+use crate::mac::{Mac, MacResult};
 
 #[derive(Clone, Copy)]
 pub struct Poly1305 {
@@ -225,8 +225,8 @@ impl Mac for Poly1305 {
 mod test {
     use std::iter::repeat;
 
-    use poly1305::Poly1305;
-    use mac::Mac;
+    use crate::poly1305::Poly1305;
+    use crate::mac::Mac;
 
     fn poly1305(key: &[u8], msg: &[u8], mac: &mut [u8]) {
         let mut poly = Poly1305::new(key);

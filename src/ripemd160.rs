@@ -23,9 +23,9 @@
  */
 
 
-use cryptoutil::{write_u32_le, read_u32v_le, add_bytes_to_bits, FixedBuffer,
+use crate::cryptoutil::{write_u32_le, read_u32v_le, add_bytes_to_bits, FixedBuffer,
     FixedBuffer64, StandardPadding};
-use digest::Digest;
+use crate::digest::Digest;
 
 // Some unexported constants
 const DIGEST_BUF_LEN: usize = 5;
@@ -412,9 +412,9 @@ impl Digest for Ripemd160 {
 
 #[cfg(test)]
 mod tests {
-    use cryptoutil::test::test_digest_1million_random;
-    use digest::Digest;
-    use ripemd160::Ripemd160;
+    use crate::cryptoutil::test::test_digest_1million_random;
+    use crate::digest::Digest;
+    use crate::ripemd160::Ripemd160;
 
     #[derive(Clone)]
     struct Test {

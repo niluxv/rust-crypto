@@ -8,8 +8,8 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use cryptoutil::{write_u32_le, read_u32v_le, FixedBuffer, FixedBuffer64, StandardPadding};
-use digest::Digest;
+use crate::cryptoutil::{write_u32_le, read_u32v_le, FixedBuffer, FixedBuffer64, StandardPadding};
+use crate::digest::Digest;
 
 // A structure that represents that state of a digest computation for the MD5 digest function
 #[derive(Clone, Copy)]
@@ -212,9 +212,9 @@ impl Digest for Md5 {
 
 #[cfg(test)]
 mod tests {
-    use cryptoutil::test::test_digest_1million_random;
-    use digest::Digest;
-    use md5::Md5;
+    use crate::cryptoutil::test::test_digest_1million_random;
+    use crate::digest::Digest;
+    use crate::md5::Md5;
 
 
     struct Test {

@@ -16,17 +16,17 @@ use std;
 use std::iter::repeat;
 use std::io;
 use std::mem::size_of;
-use cryptoutil::copy_memory;
+use crate::cryptoutil::copy_memory;
 
 use rand::{OsRng, Rng};
-use serialize::base64;
-use serialize::base64::{FromBase64, ToBase64};
+use crate::serialize::base64;
+use crate::serialize::base64::{FromBase64, ToBase64};
 
-use cryptoutil::{read_u32_le, read_u32v_le, write_u32_le};
-use hmac::Hmac;
-use pbkdf2::pbkdf2;
-use sha2::Sha256;
-use util::fixed_time_eq;
+use crate::cryptoutil::{read_u32_le, read_u32v_le, write_u32_le};
+use crate::hmac::Hmac;
+use crate::pbkdf2::pbkdf2;
+use crate::sha2::Sha256;
+use crate::util::fixed_time_eq;
 
 // The salsa20/8 core function.
 fn salsa20_8(input: &[u8], output: &mut [u8]) {
@@ -269,7 +269,7 @@ pub fn scrypt(password: &[u8], salt: &[u8], params: &ScryptParams, output: &mut 
  *
  */
 pub fn scrypt_simple(password: &str, params: &ScryptParams) -> io::Result<String> {
-    let mut rng = try!(OsRng::new());
+    let mut rng = OsRng::new()?;
 
     // 128-bit salt
     let salt: Vec<u8> = rng.gen_iter::<u8>().take(16).collect();
@@ -409,7 +409,7 @@ pub fn scrypt_check(password: &str, hashed_value: &str) -> Result<bool, &'static
 mod test {
     use std::iter::repeat;
 
-    use scrypt::{scrypt, scrypt_simple, scrypt_check, ScryptParams};
+    use crate::scrypt::{scrypt, scrypt_simple, scrypt_check, ScryptParams};
 
     struct Test {
         password: &'static str,

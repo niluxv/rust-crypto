@@ -11,12 +11,12 @@ Galois Message Authentication Code (GMAC). GCM is an efficient algorithm providi
 authenticated encryption.
 */
 
-use aes::{ctr, KeySize};
-use aead::{AeadEncryptor,AeadDecryptor};
-use cryptoutil::copy_memory;
-use symmetriccipher::SynchronousStreamCipher;
-use ghash::{Ghash};
-use util::fixed_time_eq;
+use crate::aes::{ctr, KeySize};
+use crate::aead::{AeadEncryptor,AeadDecryptor};
+use crate::cryptoutil::copy_memory;
+use crate::symmetriccipher::SynchronousStreamCipher;
+use crate::ghash::{Ghash};
+use crate::util::fixed_time_eq;
 
 pub struct AesGcm<'a> {
     cipher: Box<SynchronousStreamCipher + 'a>,
@@ -92,10 +92,10 @@ impl<'a> AeadDecryptor for AesGcm<'static> {
 
 #[cfg(test)]
 mod test {
-    use aes::KeySize;
-    use aes_gcm::AesGcm;
-    use aead::{AeadEncryptor, AeadDecryptor};
-    use serialize::hex::FromHex;
+    use crate::aes::KeySize;
+    use crate::aes_gcm::AesGcm;
+    use crate::aead::{AeadEncryptor, AeadDecryptor};
+    use crate::serialize::hex::FromHex;
     use std::iter::repeat;
     fn hex_to_bytes(raw_hex: &str) -> Vec<u8> {
         raw_hex.from_hex().ok().unwrap()

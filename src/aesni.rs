@@ -11,10 +11,10 @@ Note that it only works on x86(_64) CPU's with the aes-ni extension.
 When compiled for non-x86(_64) this module won't exist.
 */
 
-use aes::KeySize;
-use aes::KeySize::{KeySize128, KeySize192, KeySize256};
-use symmetriccipher::{BlockEncryptor, BlockDecryptor};
-use util::supports_aesni;
+use crate::aes::KeySize;
+use crate::aes::KeySize::{KeySize128, KeySize192, KeySize256};
+use crate::symmetriccipher::{BlockEncryptor, BlockDecryptor};
+use crate::util::supports_aesni;
 
 #[derive(Copy)]
 pub struct AesNiEncryptor {

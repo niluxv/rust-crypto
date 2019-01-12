@@ -4,10 +4,10 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use buffer::{BufferResult, RefReadBuffer, RefWriteBuffer};
-use symmetriccipher::{Encryptor, Decryptor, SynchronousStreamCipher, SymmetricCipherError};
-use cryptoutil::{read_u32_le, symm_enc_or_dec, write_u32_le, xor_keystream};
-use simd::u32x4;
+use crate::buffer::{BufferResult, RefReadBuffer, RefWriteBuffer};
+use crate::symmetriccipher::{Encryptor, Decryptor, SynchronousStreamCipher, SymmetricCipherError};
+use crate::cryptoutil::{read_u32_le, symm_enc_or_dec, write_u32_le, xor_keystream};
+use crate::simd::u32x4;
 
 use std::cmp;
 
@@ -251,11 +251,11 @@ pub fn hsalsa20(key: &[u8], nonce: &[u8], out: &mut [u8]) {
 mod test {
     use std::iter::repeat;
 
-    use salsa20::Salsa20;
-    use symmetriccipher::SynchronousStreamCipher;
+    use crate::salsa20::Salsa20;
+    use crate::symmetriccipher::SynchronousStreamCipher;
 
-    use digest::Digest;
-    use sha2::Sha256;
+    use crate::digest::Digest;
+    use crate::sha2::Sha256;
 
     #[test]
     fn test_salsa20_128bit_ecrypt_set_1_vector_0() {

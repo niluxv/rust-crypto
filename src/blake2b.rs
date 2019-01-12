@@ -5,10 +5,10 @@
 // except according to those terms.
 
 use std::iter::repeat;
-use cryptoutil::{copy_memory, read_u64v_le, write_u64v_le};
-use digest::Digest;
-use mac::{Mac, MacResult};
-use util::secure_memset;
+use crate::cryptoutil::{copy_memory, read_u64v_le, write_u64v_le};
+use crate::digest::Digest;
+use crate::mac::{Mac, MacResult};
+use crate::util::secure_memset;
 
 static IV : [u64; 8] = [
   0x6a09e667f3bcc908, 0xbb67ae8584caa73b,
@@ -131,7 +131,7 @@ impl Blake2b {
 
     fn apply_param(&mut self) {
         use std::io::Write;
-        use cryptoutil::WriteExt;
+        use crate::cryptoutil::WriteExt;
 
         let mut param_bytes : [u8; 64] = [0; 64];
         {
@@ -390,9 +390,9 @@ impl Mac for Blake2b {
 #[cfg(test)]
 mod digest_tests {
     //use cryptoutil::test::test_digest_1million_random;
-    use blake2b::Blake2b;
-    use digest::Digest;
-    use serialize::hex::FromHex;
+    use crate::blake2b::Blake2b;
+    use crate::digest::Digest;
+    use crate::serialize::hex::FromHex;
 
 
     struct Test {
@@ -500,8 +500,8 @@ mod digest_tests {
 
 #[cfg(test)]
 mod mac_tests {
-    use blake2b::Blake2b;
-    use mac::Mac;
+    use crate::blake2b::Blake2b;
+    use crate::mac::Mac;
 
     #[test]
     fn test_blake2b_mac() {

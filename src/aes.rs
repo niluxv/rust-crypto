@@ -8,13 +8,13 @@
 //! If the aes-ni instructions are available it will use the `aesni` module, otherwise the `aessafe` module.
 
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-use aesni;
+use crate::aesni;
 
-use aessafe;
-use blockmodes::{PaddingProcessor, EcbEncryptor, EcbDecryptor, CbcEncryptor, CbcDecryptor, CtrMode,
+use crate::aessafe;
+use crate::blockmodes::{PaddingProcessor, EcbEncryptor, EcbDecryptor, CbcEncryptor, CbcDecryptor, CtrMode,
     CtrModeX8};
-use symmetriccipher::{Encryptor, Decryptor, SynchronousStreamCipher};
-use util;
+use crate::symmetriccipher::{Encryptor, Decryptor, SynchronousStreamCipher};
+use crate::util;
 
 /// AES key size
 #[derive(Clone, Copy)]
@@ -292,14 +292,14 @@ mod test {
     use std::iter::repeat;
 
     #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-    use aesni;
+    use crate::aesni;
 
-    use aessafe;
-    use symmetriccipher::{BlockEncryptor, BlockDecryptor, BlockEncryptorX8, BlockDecryptorX8,
+    use crate::aessafe;
+    use crate::symmetriccipher::{BlockEncryptor, BlockDecryptor, BlockEncryptorX8, BlockDecryptorX8,
             SynchronousStreamCipher};
-    use util;
-    use aes;
-    use aes::KeySize::{KeySize128, KeySize192, KeySize256};
+    use crate::util;
+    use crate::aes;
+    use crate::aes::KeySize::{KeySize128, KeySize192, KeySize256};
 
     // Test vectors from:
     // http://www.inconteam.com/software-development/41-encryption/55-aes-test-vectors

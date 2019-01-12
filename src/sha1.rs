@@ -60,9 +60,9 @@ Some of these functions are commonly found in all hash digest
 algorithms, but some, like "parity" is only found in SHA-1.
  */
 
-use digest::Digest;
-use cryptoutil::{write_u32_be, read_u32v_be, add_bytes_to_bits, FixedBuffer, FixedBuffer64, StandardPadding};
-use simd::u32x4;
+use crate::digest::Digest;
+use crate::cryptoutil::{write_u32_be, read_u32v_be, add_bytes_to_bits, FixedBuffer, FixedBuffer64, StandardPadding};
+use crate::simd::u32x4;
 
 const STATE_LEN: usize = 5;
 const BLOCK_LEN: usize = 16;
@@ -420,9 +420,9 @@ impl Digest for Sha1 {
 
 #[cfg(test)]
 mod tests {
-    use cryptoutil::test::test_digest_1million_random;
-    use digest::Digest;
-    use sha1::Sha1;
+    use crate::cryptoutil::test::test_digest_1million_random;
+    use crate::digest::Digest;
+    use crate::sha1::Sha1;
 
     #[derive(Clone)]
     struct Test {

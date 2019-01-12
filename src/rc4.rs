@@ -9,9 +9,9 @@
  * THIS IMPLEMENTATION IS NOT A FIXED TIME IMPLEMENTATION! DO NOT USE!
  */
 
-use buffer::{BufferResult, RefReadBuffer, RefWriteBuffer};
-use symmetriccipher::{Encryptor, Decryptor, SynchronousStreamCipher, SymmetricCipherError};
-use cryptoutil::symm_enc_or_dec;
+use crate::buffer::{BufferResult, RefReadBuffer, RefWriteBuffer};
+use crate::symmetriccipher::{Encryptor, Decryptor, SynchronousStreamCipher, SymmetricCipherError};
+use crate::cryptoutil::symm_enc_or_dec;
 
 #[derive(Copy)]
 pub struct Rc4 {
@@ -72,8 +72,8 @@ impl Decryptor for Rc4 {
 mod test {
     use std::iter::repeat;
 
-    use symmetriccipher::SynchronousStreamCipher;
-    use rc4::Rc4;
+    use crate::symmetriccipher::SynchronousStreamCipher;
+    use crate::rc4::Rc4;
 
     struct Test {
         key: &'static str,

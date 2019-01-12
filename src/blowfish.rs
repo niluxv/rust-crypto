@@ -4,8 +4,8 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use cryptoutil::{read_u32v_be, write_u32_be};
-use symmetriccipher::{BlockEncryptor, BlockDecryptor};
+use crate::cryptoutil::{read_u32v_be, write_u32_be};
+use crate::symmetriccipher::{BlockEncryptor, BlockDecryptor};
 
 #[derive(Clone,Copy)]
 pub struct Blowfish {
@@ -339,8 +339,8 @@ impl BlockDecryptor for Blowfish {
 
 #[cfg(test)]
 mod test {
-    use blowfish::Blowfish;
-    use symmetriccipher::{BlockEncryptor, BlockDecryptor};
+    use crate::blowfish::Blowfish;
+    use crate::symmetriccipher::{BlockEncryptor, BlockDecryptor};
     struct Test {
         key: Vec<u8>,
         plaintext: Vec<u8>,

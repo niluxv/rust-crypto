@@ -6,8 +6,8 @@
 
 use std::ops::BitXor;
 
-use cryptoutil::{read_u64v_le, write_u64v_le};
-use symmetriccipher::{BlockDecryptor, BlockEncryptor};
+use crate::cryptoutil::{read_u64v_le, write_u64v_le};
+use crate::symmetriccipher::{BlockDecryptor, BlockEncryptor};
 
 // Magic constant for key schedule
 const C240: u64 = 0x1BD11BDAA9FC1A22;
@@ -226,7 +226,7 @@ fn inv_mix(r: u32, y: (u64, u64)) -> (u64, u64) {
 #[cfg(test)]
 mod test {
     use super::*;
-    use symmetriccipher::{BlockDecryptor, BlockEncryptor};
+    use crate::symmetriccipher::{BlockDecryptor, BlockEncryptor};
 
     struct TestCase {
         tweak: [u8; 16],

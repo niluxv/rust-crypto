@@ -5,11 +5,11 @@
 // except according to those terms.
 
 
-use buffer::{BufferResult, RefReadBuffer, RefWriteBuffer};
-use symmetriccipher::{Encryptor, Decryptor, SynchronousStreamCipher, SymmetricCipherError};
-use cryptoutil::{read_u32_le, symm_enc_or_dec, write_u32v_le};
+use crate::buffer::{BufferResult, RefReadBuffer, RefWriteBuffer};
+use crate::symmetriccipher::{Encryptor, Decryptor, SynchronousStreamCipher, SymmetricCipherError};
+use crate::cryptoutil::{read_u32_le, symm_enc_or_dec, write_u32v_le};
 
-use cryptoutil::copy_memory;
+use crate::cryptoutil::copy_memory;
 
 
 const ALPHA_MUL_TABLE : [u32; 256] =
@@ -2329,9 +2329,9 @@ impl Decryptor for Sosemanuk {
 
 #[cfg(test)]
 mod test {
-    use sosemanuk::Sosemanuk;
-    use symmetriccipher::SynchronousStreamCipher;
-    use serialize::hex::{FromHex};
+    use crate::sosemanuk::Sosemanuk;
+    use crate::symmetriccipher::SynchronousStreamCipher;
+    use crate::serialize::hex::{FromHex};
 
     // Vectors from http://www.ecrypt.eu.org/stream/svn/viewcvs.cgi/ecrypt/trunk/submissions/sosemanuk/unverified.test-vectors?rev=108&view=markup
 

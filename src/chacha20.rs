@@ -5,10 +5,10 @@
 // except according to those terms.
 use std::cmp;
 
-use buffer::{BufferResult, RefReadBuffer, RefWriteBuffer};
-use symmetriccipher::{Encryptor, Decryptor, SynchronousStreamCipher, SymmetricCipherError};
-use cryptoutil::{read_u32_le, symm_enc_or_dec, write_u32_le, xor_keystream};
-use simd::u32x4;
+use crate::buffer::{BufferResult, RefReadBuffer, RefWriteBuffer};
+use crate::symmetriccipher::{Encryptor, Decryptor, SynchronousStreamCipher, SymmetricCipherError};
+use crate::cryptoutil::{read_u32_le, symm_enc_or_dec, write_u32_le, xor_keystream};
+use crate::simd::u32x4;
 
 #[derive(Clone,Copy)]
 struct ChaChaState {
@@ -278,8 +278,8 @@ impl Decryptor for ChaCha20 {
 mod test {
     use std::iter::repeat;
 
-    use chacha20::ChaCha20;
-    use symmetriccipher::SynchronousStreamCipher;
+    use crate::chacha20::ChaCha20;
+    use crate::symmetriccipher::SynchronousStreamCipher;
 
     #[test]
     fn test_chacha20_256_tls_vectors() {

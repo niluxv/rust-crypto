@@ -44,16 +44,16 @@
  * say) then you need to EXPLICITLY RESEED THE RNG AFTER FORKING.
  */
 
-use cryptoutil::copy_memory;
+use crate::cryptoutil::copy_memory;
 
 use rand::{Rng, SeedableRng};
 use time::precise_time_s;
 
-use aessafe::AesSafe256Encryptor;
-use cryptoutil::read_u32_le;
-use digest::Digest;
-use sha2::Sha256;
-use symmetriccipher::BlockEncryptor;
+use crate::aessafe::AesSafe256Encryptor;
+use crate::cryptoutil::read_u32_le;
+use crate::digest::Digest;
+use crate::sha2::Sha256;
+use crate::symmetriccipher::BlockEncryptor;
 
 /// Length in bytes that the first pool must be before a "catastrophic
 /// reseed" is allowed to happen. (A direct reseed through the

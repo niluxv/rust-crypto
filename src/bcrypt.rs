@@ -8,8 +8,8 @@
 This public module implements the bcrypt password hash function (slow hash function).
 */
 
-use blowfish::Blowfish;
-use cryptoutil::{write_u32_be};
+use crate::blowfish::Blowfish;
+use crate::cryptoutil::{write_u32_be};
 
 fn setup(cost: u32, salt: &[u8], key: &[u8]) -> Blowfish {
     assert!(cost < 32);
@@ -45,7 +45,7 @@ pub fn bcrypt(cost: u32, salt: &[u8], password: &[u8], output: &mut [u8]) {
 
 #[cfg(test)]
 mod test {
-    use bcrypt::bcrypt;
+    use crate::bcrypt::bcrypt;
 
     struct Test {
         cost: u32,

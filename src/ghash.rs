@@ -18,11 +18,11 @@
 
 use std::ops::BitXor;
 use std::mem;
-use cryptoutil::copy_memory;
+use crate::cryptoutil::copy_memory;
 
-use cryptoutil::{read_u32_be, write_u32_be};
-use mac::{Mac, MacResult};
-use simd;
+use crate::cryptoutil::{read_u32_be, write_u32_be};
+use crate::mac::{Mac, MacResult};
+use crate::simd;
 
 // A struct representing an element in GF(2^128)
 // x^0 is the msb, while x^127 is the lsb
@@ -83,7 +83,7 @@ impl Gf128 {
 
     // This XORs the value of y with x if the LSB of self is set, otherwise y is returned
     fn cond_xor(self, x: Gf128, y: Gf128) -> Gf128 {
-        use simd::SimdExt;
+        use crate::simd::SimdExt;
         let lsb = simd::u32x4(1, 0, 0, 0);
         let simd::u32x4(m, _, _, _) = (self.d & lsb).simd_eq(lsb);
         let mask = simd::u32x4(m, m, m, m);
@@ -296,7 +296,7 @@ impl Mac for Ghash {
 
 #[cfg(test)]
 mod test {
-    use ghash::Ghash;
+    use crate::ghash::Ghash;
 
     // Test cases from:
     // <http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf>
