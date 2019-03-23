@@ -6,7 +6,7 @@
 A (mostly) pure-Rust implementation of various common cryptographic algorithms.
 Fork of [Rust-Crypto by DaGenix: https://github.com/DaGenix/rust-crypto](https://github.com/DaGenix/rust-crypto "Rust-Crypto").
 
-This fork aims to maintain Rust-Crypto because it is unmainained.
+This fork aims to maintain Rust-Crypto because it is unmainained. It is intended to be used as a temporary replacement for Rust-Crypto. _This fork is not actively maintained. New users should look for something else, for example [Rust Crypto](https://github.com/RustCrypto)._
 
 Rust-Crypto seeks to create practical, auditable, pure-Rust implementations of common cryptographic
 algorithms with a minimum amount of assembly code where appropriate. The x86-64, x86, and

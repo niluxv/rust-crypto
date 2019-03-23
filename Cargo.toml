@@ -11,6 +11,9 @@ categories = ["cryptography"]
 readme = "README.md"
 build = "build.rs"
 
+[badges]
+maintenance = { status = "passively-maintained" }
+
 [lib]
 name = "crypto"
 
