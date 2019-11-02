@@ -10,6 +10,7 @@ keywords = [ "Crypto", "MD5", "Sha1", "Sha2", "AES" ]
 categories = ["cryptography"]
 readme = "README.md"
 build = "build.rs"
+edition = "2018"
 
 [badges]
 maintenance = { status = "passively-maintained" }

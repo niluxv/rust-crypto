@@ -30,7 +30,7 @@ pub enum KeySize {
 pub fn ecb_encryptor<X: PaddingProcessor + Send + 'static>(
         key_size: KeySize,
         key: &[u8],
-        padding: X) -> Box<Encryptor> {
+        padding: X) -> Box<dyn Encryptor> {
     if util::supports_aesni() {
         // use the aes instruction set (aes-ni) in new x86(_64) processors
         // (aesni module defined in the file 'aesni.rs' and the files 'aesni_helpers.c' and 'aesni_helpers.asm')
@@ -83,7 +83,7 @@ pub fn ecb_encryptor<X: PaddingProcessor + Send + 'static>(
 pub fn ecb_decryptor<X: PaddingProcessor + Send + 'static>(
         key_size: KeySize,
         key: &[u8],
-        padding: X) -> Box<Decryptor> {
+        padding: X) -> Box<dyn Decryptor> {
     if util::supports_aesni() {
         let aes_dec = aesni::AesNiDecryptor::new(key_size, key);
         Box::new(EcbDecryptor::new(aes_dec, padding))
@@ -134,7 +134,7 @@ pub fn cbc_encryptor<X: PaddingProcessor + Send + 'static>(
         key_size: KeySize,
         key: &[u8],
         iv: &[u8],
-        padding: X) -> Box<Encryptor + 'static> {
+        padding: X) -> Box<dyn Encryptor + 'static> {
     if util::supports_aesni() {
         let aes_enc = aesni::AesNiEncryptor::new(key_size, key);
         Box::new(CbcEncryptor::new(aes_enc, padding, iv.to_vec()))
@@ -186,7 +186,7 @@ pub fn cbc_decryptor<X: PaddingProcessor + Send + 'static>(
         key_size: KeySize,
         key: &[u8],
         iv: &[u8],
-        padding: X) -> Box<Decryptor + 'static> {
+        padding: X) -> Box<dyn Decryptor + 'static> {
     if util::supports_aesni() {
         let aes_dec = aesni::AesNiDecryptor::new(key_size, key);
         Box::new(CbcDecryptor::new(aes_dec, padding, iv.to_vec()))
@@ -240,7 +240,7 @@ pub fn cbc_decryptor<X: PaddingProcessor + Send + 'static>(
 pub fn ctr(
         key_size: KeySize,
         key: &[u8],
-        iv: &[u8]) -> Box<SynchronousStreamCipher + 'static> {
+        iv: &[u8]) -> Box<dyn SynchronousStreamCipher + 'static> {
     if util::supports_aesni() {
         let aes_dec = aesni::AesNiEncryptor::new(key_size, key);
         Box::new(CtrMode::new(aes_dec, iv.to_vec()))

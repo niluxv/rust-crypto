@@ -11,7 +11,7 @@ use crypto::{ symmetriccipher, buffer, aes, blockmodes };
 use crypto::buffer::{ ReadBuffer, WriteBuffer, BufferResult };
 
 
-fn test_encrypt (encryptor: &mut Box<symmetriccipher::Encryptor>, data: &[u8]) -> Result<Vec<u8>, symmetriccipher::SymmetricCipherError> {
+fn test_encrypt (encryptor: &mut Box<dyn symmetriccipher::Encryptor>, data: &[u8]) -> Result<Vec<u8>, symmetriccipher::SymmetricCipherError> {
     
     // Create an encryptor instance of the best performing
     // type available for the platform.
@@ -47,7 +47,7 @@ fn test_encrypt (encryptor: &mut Box<symmetriccipher::Encryptor>, data: &[u8]) -
     // us that it stopped processing data due to not having any more data in the
     // input buffer.
     loop {
-        let result = try!(encryptor.encrypt(&mut read_buffer, &mut write_buffer, true));
+        let result = r#try!(encryptor.encrypt(&mut read_buffer, &mut write_buffer, true));
 
         // "write_buffer.take_read_buffer().take_remaining()" means:
         // from the writable buffer, create a new readable buffer which
@@ -68,7 +68,7 @@ fn test_encrypt (encryptor: &mut Box<symmetriccipher::Encryptor>, data: &[u8]) -
 // comments in that function. In non-example code, if desired, it is possible to
 // share much of the implementation using closures to hide the operation
 // being performed. However, such code would make this example less clear.
-fn test_decrypt(decryptor: &mut Box<symmetriccipher::Decryptor>, encrypted_data: &[u8]) -> Result<Vec<u8>, symmetriccipher::SymmetricCipherError> {
+fn test_decrypt(decryptor: &mut Box<dyn symmetriccipher::Decryptor>, encrypted_data: &[u8]) -> Result<Vec<u8>, symmetriccipher::SymmetricCipherError> {
 
     let mut final_result = Vec::<u8>::new();
     let mut read_buffer = buffer::RefReadBuffer::new(encrypted_data);
@@ -76,7 +76,7 @@ fn test_decrypt(decryptor: &mut Box<symmetriccipher::Decryptor>, encrypted_data:
     let mut write_buffer = buffer::RefWriteBuffer::new(&mut buffer);
 
     loop {
-        let result = try!(decryptor.decrypt(&mut read_buffer, &mut write_buffer, true));
+        let result = r#try!(decryptor.decrypt(&mut read_buffer, &mut write_buffer, true));
         final_result.extend(write_buffer.take_read_buffer().take_remaining().iter().cloned());
         match result {
             BufferResult::BufferUnderflow => break,
@@ -87,13 +87,13 @@ fn test_decrypt(decryptor: &mut Box<symmetriccipher::Decryptor>, encrypted_data:
     Ok(final_result)
 }
 
-fn test_streamcipher(streamcipher: &mut Box<symmetriccipher::SynchronousStreamCipher>, data: &[u8]) -> Result<Vec<u8>, symmetriccipher::SymmetricCipherError> {
+fn test_streamcipher(streamcipher: &mut Box<dyn symmetriccipher::SynchronousStreamCipher>, data: &[u8]) -> Result<Vec<u8>, symmetriccipher::SymmetricCipherError> {
     let mut result: Vec<u8> = repeat(0).take(data.len()).collect();
     streamcipher.process(data, &mut result[..]);
     Ok(result)
 }
 
-fn new_encryptor_aessafe_cbc(keysize: aes::KeySize, key: &[u8], iv: &[u8]) -> Box<symmetriccipher::Encryptor> {
+fn new_encryptor_aessafe_cbc(keysize: aes::KeySize, key: &[u8], iv: &[u8]) -> Box<dyn symmetriccipher::Encryptor> {
     match keysize {
         aes::KeySize::KeySize128 => 
             {Box::new(blockmodes::CbcEncryptor::new(crypto::aessafe::AesSafe128Encryptor::new(key), blockmodes::NoPadding, iv.to_vec()))},
@@ -104,7 +104,7 @@ fn new_encryptor_aessafe_cbc(keysize: aes::KeySize, key: &[u8], iv: &[u8]) -> Bo
     }
 }
 
-fn new_decryptor_aessafe_cbc(keysize: aes::KeySize, key: &[u8], iv: &[u8]) -> Box<symmetriccipher::Decryptor> {
+fn new_decryptor_aessafe_cbc(keysize: aes::KeySize, key: &[u8], iv: &[u8]) -> Box<dyn symmetriccipher::Decryptor> {
     match keysize {
         aes::KeySize::KeySize128 => 
             {Box::new(blockmodes::CbcDecryptor::new(crypto::aessafe::AesSafe128Decryptor::new(key), blockmodes::NoPadding, iv.to_vec()))},
@@ -115,7 +115,7 @@ fn new_decryptor_aessafe_cbc(keysize: aes::KeySize, key: &[u8], iv: &[u8]) -> Bo
     }
 }
 
-fn new_encryptor_aessafe_ecb(keysize: aes::KeySize, key: &[u8]) -> Box<symmetriccipher::Encryptor> {
+fn new_encryptor_aessafe_ecb(keysize: aes::KeySize, key: &[u8]) -> Box<dyn symmetriccipher::Encryptor> {
     match keysize {
         aes::KeySize::KeySize128 => 
             {Box::new(blockmodes::EcbEncryptor::new(crypto::aessafe::AesSafe128Encryptor::new(key), blockmodes::NoPadding))},
@@ -126,7 +126,7 @@ fn new_encryptor_aessafe_ecb(keysize: aes::KeySize, key: &[u8]) -> Box<symmetric
     }
 }
 
-fn new_decryptor_aessafe_ecb(keysize: aes::KeySize, key: &[u8]) -> Box<symmetriccipher::Decryptor> {
+fn new_decryptor_aessafe_ecb(keysize: aes::KeySize, key: &[u8]) -> Box<dyn symmetriccipher::Decryptor> {
     match keysize {
         aes::KeySize::KeySize128 => 
             {Box::new(blockmodes::EcbDecryptor::new(crypto::aessafe::AesSafe128Decryptor::new(key), blockmodes::NoPadding))},
@@ -138,8 +138,8 @@ fn new_decryptor_aessafe_ecb(keysize: aes::KeySize, key: &[u8]) -> Box<symmetric
 }
 
 struct TestDataBlockMode {
-    encryptor: Box<symmetriccipher::Encryptor>,
-    decryptor: Box<symmetriccipher::Decryptor>,
+    encryptor: Box<dyn symmetriccipher::Encryptor>,
+    decryptor: Box<dyn symmetriccipher::Decryptor>,
     data: Vec<u8>,
     expected: Vec<u8>
 }
@@ -162,8 +162,8 @@ impl TestDataBlockMode {
 }
 
 struct TestDataStreamMode {
-    streamcipher_enc: Box<symmetriccipher::SynchronousStreamCipher>,
-    streamcipher_dec: Box<symmetriccipher::SynchronousStreamCipher>,
+    streamcipher_enc: Box<dyn symmetriccipher::SynchronousStreamCipher>,
+    streamcipher_dec: Box<dyn symmetriccipher::SynchronousStreamCipher>,
     data: Vec<u8>,
     expected: Vec<u8>
 }
