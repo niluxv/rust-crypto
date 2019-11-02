@@ -9,6 +9,7 @@ use crate::cryptoutil::{copy_memory, read_u32v_le, write_u32v_le};
 use crate::digest::Digest;
 use crate::mac::{Mac, MacResult};
 use crate::util::secure_memset;
+use byteorder::{BE, LE};
 
 static IV : [u32; 8] = [
   0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
@@ -126,7 +127,7 @@ impl Blake2s {
 
     fn apply_param(&mut self) {
         use std::io::Write;
-        use crate::cryptoutil::WriteExt;
+        use byteorder::WriteBytesExt;
 
         let mut param_bytes : [u8; 32] = [0; 32];
         {
@@ -135,7 +136,7 @@ impl Blake2s {
             writer.write_u8(self.param.key_length).unwrap();
             writer.write_u8(self.param.fanout).unwrap();
             writer.write_u8(self.param.depth).unwrap();
-            writer.write_u32_le(self.param.leaf_length).unwrap();
+            writer.write_u32::<LE>(self.param.leaf_length).unwrap();
             writer.write_all(&self.param.node_offset).unwrap();
             writer.write_u8(self.param.node_depth).unwrap();
             writer.write_u8(self.param.inner_length).unwrap();
