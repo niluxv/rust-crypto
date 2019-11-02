@@ -20,7 +20,7 @@ audited for correctness, so any use where security is important is not recommend
 
 ## Usage
 
-Rust-crypto-maintained isn't yet uploaded to crates.io.
+Rust-crypto-maintained isn't on <crates.io>.
 To use Rust-crypto-maintained, add the following to your Cargo.toml:
 
 ```toml
@@ -28,7 +28,7 @@ To use Rust-crypto-maintained, add the following to your Cargo.toml:
 rust-crypto-maintained = { git = "https://github.com/niluxv/rust-crypto", branch = "stable_0.2" }
 ```
 
-and the following to your crate root:
+and for rust edition 2015 the following to your crate root:
 
 ```rust
 extern crate crypto;
