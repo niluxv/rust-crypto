@@ -25,6 +25,7 @@ with-bench = []
 cc = "^1.0"
 
 [dependencies]
+byteorder = "^1.3"
 libc = "^0.2"
 time = "^0.1"
 rand = "^0.4"

@@ -11,6 +11,7 @@
 use std;
 use std::{io, mem};
 use std::ptr;
+use byteorder::{BigEndian, ByteOrder, LittleEndian};
 
 use crate::buffer::{ReadBuffer, WriteBuffer, BufferResult};
 use crate::buffer::BufferResult::{BufferUnderflow, BufferOverflow};
@@ -20,158 +21,70 @@ use crate::symmetriccipher::{SynchronousStreamCipher, SymmetricCipherError};
 /// format.
 pub fn write_u64_be(dst: &mut[u8], mut input: u64) {
     assert!(dst.len() == 8);
-    input = input.to_be();
-    unsafe {
-        let tmp = &input as *const _ as *const u8;
-        ptr::copy_nonoverlapping(tmp, dst.get_unchecked_mut(0), 8);
-    }
+    BigEndian::write_u64(dst, input);
 }
 
 /// Write a u64 into a vector, which must be 8 bytes long. The value is written in little-endian
 /// format.
 pub fn write_u64_le(dst: &mut[u8], mut input: u64) {
     assert!(dst.len() == 8);
-    input = input.to_le();
-    unsafe {
-        let tmp = &input as *const _ as *const u8;
-        ptr::copy_nonoverlapping(tmp, dst.get_unchecked_mut(0), 8);
-    }
+    LittleEndian::write_u64(dst, input);
 }
 
 /// Write a vector of u64s into a vector of bytes. The values are written in little-endian format.
 pub fn write_u64v_le(dst: &mut[u8], input: &[u64]) {
-    assert!(dst.len() == 8 * input.len());
-    unsafe {
-        let mut x: *mut u8 = dst.get_unchecked_mut(0);
-        let mut y: *const u64 = input.get_unchecked(0);
-        for _ in 0..input.len() {
-            let tmp = (*y).to_le();
-            ptr::copy_nonoverlapping(&tmp as *const _ as *const u8, x, 8);
-            x = x.offset(8);
-            y = y.offset(1);
-        }
-    }
+    LittleEndian::write_u64_into(input, dst);
 }
 
 /// Write a u32 into a vector, which must be 4 bytes long. The value is written in big-endian
 /// format.
 pub fn write_u32_be(dst: &mut [u8], mut input: u32) {
     assert!(dst.len() == 4);
-    input = input.to_be();
-    unsafe {
-        let tmp = &input as *const _ as *const u8;
-        ptr::copy_nonoverlapping(tmp, dst.get_unchecked_mut(0), 4);
-    }
+    BigEndian::write_u32(dst, input);
 }
 
 /// Write a u32 into a vector, which must be 4 bytes long. The value is written in little-endian
 /// format.
 pub fn write_u32_le(dst: &mut[u8], mut input: u32) {
     assert!(dst.len() == 4);
-    input = input.to_le();
-    unsafe {
-        let tmp = &input as *const _ as *const u8;
-        ptr::copy_nonoverlapping(tmp, dst.get_unchecked_mut(0), 4);
-    }
+    LittleEndian::write_u32(dst, input);
 }
 
 /// Write a vector of u32s into a vector of bytes. The values are written in little-endian format.
 pub fn write_u32v_le (dst: &mut[u8], input: &[u32]) {
-    assert!(dst.len() == 4 * input.len());
-    unsafe {
-        let mut x: *mut u8 = dst.get_unchecked_mut(0);
-        let mut y: *const u32 = input.get_unchecked(0);
-        for _ in 0..input.len() {
-            let tmp = (*y).to_le();
-            ptr::copy_nonoverlapping(&tmp as *const _ as *const u8, x, 4);
-            x = x.offset(4);
-            y = y.offset(1);
-        }
-    }
+    LittleEndian::write_u32_into(input, dst);
 }
 
 /// Read a vector of bytes into a vector of u64s. The values are read in big-endian format.
 pub fn read_u64v_be(dst: &mut[u64], input: &[u8]) {
-    assert!(dst.len() * 8 == input.len());
-    unsafe {
-        let mut x: *mut u64 = dst.get_unchecked_mut(0);
-        let mut y: *const u8 = input.get_unchecked(0);
-        for _ in 0..dst.len() {
-            let mut tmp: u64 = mem::uninitialized();
-            ptr::copy_nonoverlapping(y, &mut tmp as *mut _ as *mut u8, 8);
-            *x = u64::from_be(tmp);
-            x = x.offset(1);
-            y = y.offset(8);
-        }
-    }
+    BigEndian::read_u64_into(input, dst);
 }
 
 /// Read a vector of bytes into a vector of u64s. The values are read in little-endian format.
 pub fn read_u64v_le(dst: &mut[u64], input: &[u8]) {
-    assert!(dst.len() * 8 == input.len());
-    unsafe {
-        let mut x: *mut u64 = dst.get_unchecked_mut(0);
-        let mut y: *const u8 = input.get_unchecked(0);
-        for _ in 0..dst.len() {
-            let mut tmp: u64 = mem::uninitialized();
-            ptr::copy_nonoverlapping(y, &mut tmp as *mut _ as *mut u8, 8);
-            *x = u64::from_le(tmp);
-            x = x.offset(1);
-            y = y.offset(8);
-        }
-    }
+    LittleEndian::read_u64_into(input, dst);
 }
 
 /// Read a vector of bytes into a vector of u32s. The values are read in big-endian format.
 pub fn read_u32v_be(dst: &mut[u32], input: &[u8]) {
-    assert!(dst.len() * 4 == input.len());
-    unsafe {
-        let mut x: *mut u32 = dst.get_unchecked_mut(0);
-        let mut y: *const u8 = input.get_unchecked(0);
-        for _ in 0..dst.len() {
-            let mut tmp: u32 = mem::uninitialized();
-            ptr::copy_nonoverlapping(y, &mut tmp as *mut _ as *mut u8, 4);
-            *x = u32::from_be(tmp);
-            x = x.offset(1);
-            y = y.offset(4);
-        }
-    }
+    BigEndian::read_u32_into(input, dst);
 }
 
 /// Read a vector of bytes into a vector of u32s. The values are read in little-endian format.
 pub fn read_u32v_le(dst: &mut[u32], input: &[u8]) {
-    assert!(dst.len() * 4 == input.len());
-    unsafe {
-        let mut x: *mut u32 = dst.get_unchecked_mut(0);
-        let mut y: *const u8 = input.get_unchecked(0);
-        for _ in 0..dst.len() {
-            let mut tmp: u32 = mem::uninitialized();
-            ptr::copy_nonoverlapping(y, &mut tmp as *mut _ as *mut u8, 4);
-            *x = u32::from_le(tmp);
-            x = x.offset(1);
-            y = y.offset(4);
-        }
-    }
+    LittleEndian::read_u32_into(input, dst);
 }
 
 /// Read the value of a vector of bytes as a u32 value in little-endian format.
 pub fn read_u32_le(input: &[u8]) -> u32 {
     assert!(input.len() == 4);
-    unsafe {
-        let mut tmp: u32 = mem::uninitialized();
-        ptr::copy_nonoverlapping(input.get_unchecked(0), &mut tmp as *mut _ as *mut u8, 4);
-        u32::from_le(tmp)
-    }
+    LittleEndian::read_u32(input)
 }
 
 /// Read the value of a vector of bytes as a u32 value in big-endian format.
 pub fn read_u32_be(input: &[u8]) -> u32 {
     assert!(input.len() == 4);
-    unsafe {
-        let mut tmp: u32 = mem::uninitialized();
-        ptr::copy_nonoverlapping(input.get_unchecked(0), &mut tmp as *mut _ as *mut u8, 4);
-        u32::from_be(tmp)
-    }
+    BigEndian::read_u32(input)
 }
 
 /// XOR plaintext and keystream, storing the result in dst.
