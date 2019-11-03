@@ -24,6 +24,16 @@ pub enum KeySize {
     KeySize256
 }
 
+impl KeySize {
+    fn bytes_size(self) -> usize {
+        match self {
+            Self::KeySize128 => 16,
+            Self::KeySize192 => 24,
+            Self::KeySize256 => 32,
+        }
+    }
+}
+
 // aes in electronic codebook mode (ecb) encryption
 /// Get the best implementation of an `EcbEncryptor`
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
@@ -720,10 +730,10 @@ mod bench {
     #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
     fn aesni_bench(bh: &mut Bencher, key_size: KeySize) {
         if util::supports_aesni() {
-            let key: [u8; 16] = [1u8; 16];
+            let key: [u8; 32] = [1u8; 32];
             let plain: [u8; 16] = [2u8; 16];
 
-            let a = aesni::AesNiEncryptor::new(key_size, &key);
+            let a = aesni::AesNiEncryptor::new(key_size, &key[0..key_size.bytes_size()]);
 
             let mut tmp = [0u8; 16];
 
