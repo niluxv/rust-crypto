@@ -267,7 +267,7 @@ mod test {
 #[cfg(all(test, feature = "with-bench"))]
 mod bench {
     use test::Bencher;
-    use bcrypt_pbkdf::bcrypt_pbkdf;
+    use crate::bcrypt_pbkdf::bcrypt_pbkdf;
 
     #[bench]
     fn bench_bcrypt_pbkdf_5_32(b: &mut Bencher) {

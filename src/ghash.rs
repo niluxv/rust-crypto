@@ -534,8 +534,8 @@ mod test {
 #[cfg(all(test, feature = "with-bench"))]
 mod bench {
     use test::Bencher;
-    use mac::Mac;
-    use ghash::Ghash;
+    use crate::mac::Mac;
+    use crate::ghash::Ghash;
 
     #[bench]
     pub fn ghash_10(bh: & mut Bencher) {

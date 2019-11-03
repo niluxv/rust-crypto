@@ -527,8 +527,8 @@ mod mac_tests {
 mod bench {
     use test::Bencher;
 
-    use digest::Digest;
-    use blake2b::Blake2b;
+    use crate::digest::Digest;
+    use crate::blake2b::Blake2b;
 
 
     #[bench]

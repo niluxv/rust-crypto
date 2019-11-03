@@ -534,9 +534,9 @@ mod tests {
 #[cfg(all(test, feature = "with-bench"))]
 mod bench {
     use test::Bencher;
-    use digest::Digest;
-    use sha1::{STATE_LEN, BLOCK_LEN};
-    use sha1::{Sha1, sha1_digest_block_u32};
+    use crate::digest::Digest;
+    use crate::sha1::{STATE_LEN, BLOCK_LEN};
+    use crate::sha1::{Sha1, sha1_digest_block_u32};
 
     #[bench]
     pub fn sha1_block(bh: & mut Bencher) {

@@ -547,8 +547,8 @@ mod test {
 
 #[cfg(all(test, feature = "with-bench"))]
 mod bench {
-    use blowfish::Blowfish;
-    use symmetriccipher::BlockEncryptor;
+    use crate::blowfish::Blowfish;
+    use crate::symmetriccipher::BlockEncryptor;
     use test::Bencher;
 
     #[bench]

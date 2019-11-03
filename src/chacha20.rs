@@ -596,8 +596,8 @@ mod test {
 #[cfg(all(test, feature = "with-bench"))]
 mod bench {
     use test::Bencher;
-    use symmetriccipher::SynchronousStreamCipher;
-    use chacha20::ChaCha20;
+    use crate::symmetriccipher::SynchronousStreamCipher;
+    use crate::chacha20::ChaCha20;
 
     #[bench]
     pub fn chacha20_10(bh: & mut Bencher) {

@@ -9,7 +9,7 @@
 // except according to those terms.
 
 use std;
-use std::{io, mem};
+
 use std::ptr;
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
 

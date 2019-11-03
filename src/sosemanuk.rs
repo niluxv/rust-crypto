@@ -2477,8 +2477,8 @@ mod test {
 #[cfg(all(test, feature = "with-bench"))]
 mod bench {
     use test::Bencher;
-    use symmetriccipher::SynchronousStreamCipher;
-    use sosemanuk::Sosemanuk;
+    use crate::symmetriccipher::SynchronousStreamCipher;
+    use crate::sosemanuk::Sosemanuk;
 
     #[bench]
     pub fn sosemanuk_10(bh: & mut Bencher) {

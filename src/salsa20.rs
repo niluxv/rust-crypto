@@ -367,8 +367,8 @@ mod test {
 #[cfg(all(test, feature = "with-bench"))]
 mod bench {
     use test::Bencher;
-    use symmetriccipher::SynchronousStreamCipher;
-    use salsa20::Salsa20;
+    use crate::symmetriccipher::SynchronousStreamCipher;
+    use crate::salsa20::Salsa20;
 
     #[bench]
     pub fn salsa20_10(bh: & mut Bencher) {

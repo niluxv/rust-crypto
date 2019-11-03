@@ -290,8 +290,8 @@ mod tests {
 mod bench {
     use test::Bencher;
 
-    use digest::Digest;
-    use md5::Md5;
+    use crate::digest::Digest;
+    use crate::md5::Md5;
 
 
     #[bench]

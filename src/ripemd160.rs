@@ -526,8 +526,8 @@ mod tests {
 #[cfg(all(test, feature = "with-bench"))]
 mod bench {
     use test::Bencher;
-    use digest::Digest;
-    use ripemd160::Ripemd160;
+    use crate::digest::Digest;
+    use crate::ripemd160::Ripemd160;
 
     #[bench]
     pub fn ripemd160_10(bh: & mut Bencher) {

@@ -1409,9 +1409,9 @@ mod tests {
 #[cfg(all(test, feature = "with-bench"))]
 mod bench {
     use test::Bencher;
-    use digest::Digest;
-    use sha2::{STATE_LEN, BLOCK_LEN};
-    use sha2::{Sha256, Sha512, sha256_digest_block_u32, sha512_digest_block_u64};
+    use crate::digest::Digest;
+    use crate::sha2::{STATE_LEN, BLOCK_LEN};
+    use crate::sha2::{Sha256, Sha512, sha256_digest_block_u32, sha512_digest_block_u64};
 
     #[bench]
     pub fn sha256_block(bh: & mut Bencher) {

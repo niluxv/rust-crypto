@@ -692,12 +692,12 @@ mod bench {
     use test::Bencher;
 
     #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-    use aesni;
+    use crate::aesni;
 
-    use aessafe;
-    use symmetriccipher::{BlockEncryptor, BlockEncryptorX8};
-    use util;
-    use aes::KeySize::{self, KeySize128, KeySize192, KeySize256};
+    use crate::aessafe;
+    use crate::symmetriccipher::{BlockEncryptor, BlockEncryptorX8};
+    use crate::util;
+    use crate::aes::KeySize::{self, KeySize128, KeySize192, KeySize256};
 
     #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
     #[bench]

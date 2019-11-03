@@ -489,8 +489,8 @@ mod mac_tests {
 mod bench {
     use test::Bencher;
 
-    use digest::Digest;
-    use blake2s::Blake2s;
+    use crate::digest::Digest;
+    use crate::blake2s::Blake2s;
 
 
     #[bench]

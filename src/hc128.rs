@@ -259,8 +259,8 @@ mod test {
 #[cfg(all(test, feature = "with-bench"))]
 mod bench {
     use test::Bencher;
-    use symmetriccipher::SynchronousStreamCipher;
-    use hc128::Hc128;
+    use crate::symmetriccipher::SynchronousStreamCipher;
+    use crate::hc128::Hc128;
 
     #[bench]
     pub fn hc128_10(bh: & mut Bencher) {

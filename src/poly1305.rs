@@ -361,8 +361,8 @@ mod test {
 #[cfg(all(test, feature = "with-bench"))]
 mod bench {
     use test::Bencher;
-    use mac::Mac;
-    use poly1305::Poly1305;
+    use crate::mac::Mac;
+    use crate::poly1305::Poly1305;
 
     #[bench]
     pub fn poly1305_10(bh: & mut Bencher) {

@@ -738,8 +738,8 @@ mod test {
 #[cfg(all(test, feature = "with-bench"))]
 mod bench {
     use test::Bencher;
-    use chacha20poly1305::ChaCha20Poly1305;
-    use aead::{AeadEncryptor, AeadDecryptor};
+    use crate::chacha20poly1305::ChaCha20Poly1305;
+    use crate::aead::{AeadEncryptor, AeadDecryptor};
 
     #[bench]
     pub fn chacha20poly1305_10(bh: & mut Bencher) {

@@ -117,8 +117,8 @@ mod test {
 #[cfg(all(test, feature = "with-bench"))]
 mod bench {
     use test::Bencher;
-    use symmetriccipher::SynchronousStreamCipher;
-    use rc4::Rc4;
+    use crate::symmetriccipher::SynchronousStreamCipher;
+    use crate::rc4::Rc4;
 
     #[bench]
     pub fn rc4_10(bh: & mut Bencher) {

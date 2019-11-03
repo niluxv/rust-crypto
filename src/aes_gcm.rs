@@ -217,9 +217,9 @@ mod test {
 #[cfg(all(test, feature = "with-bench"))]
 mod bench {
     use test::Bencher;
-    use aes::KeySize;
-    use aes_gcm::AesGcm;
-    use aead::{AeadEncryptor, AeadDecryptor};
+    use crate::aes::KeySize;
+    use crate::aes_gcm::AesGcm;
+    use crate::aead::{AeadEncryptor, AeadDecryptor};
 
     #[bench]
     pub fn gsm_10(bh: & mut Bencher) {

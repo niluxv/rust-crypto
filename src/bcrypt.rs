@@ -153,7 +153,7 @@ mod test {
 #[cfg(all(test, feature = "with-bench"))]
 mod bench {
     use test::Bencher;
-    use bcrypt::bcrypt;
+    use crate::bcrypt::bcrypt;
 
     #[bench]
     pub fn bcrypt_16_5(bh: & mut Bencher) {

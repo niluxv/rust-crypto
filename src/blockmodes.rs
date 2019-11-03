@@ -1325,12 +1325,12 @@ mod test {
 
 #[cfg(all(test, feature = "with-bench"))]
 mod bench {
-    use aessafe;
-    use blockmodes::{EcbEncryptor, CbcEncryptor, CtrMode, CtrModeX8,
+    use crate::aessafe;
+    use crate::blockmodes::{EcbEncryptor, CbcEncryptor, CtrMode, CtrModeX8,
         NoPadding, PkcsPadding};
-    use buffer::{ReadBuffer, WriteBuffer, RefReadBuffer, RefWriteBuffer};
-    use buffer::BufferResult::{BufferUnderflow, BufferOverflow};
-    use symmetriccipher::{Encryptor};
+    use crate::buffer::{ReadBuffer, WriteBuffer, RefReadBuffer, RefWriteBuffer};
+    use crate::buffer::BufferResult::{BufferUnderflow, BufferOverflow};
+    use crate::symmetriccipher::{Encryptor};
 
     use test::Bencher;
 
