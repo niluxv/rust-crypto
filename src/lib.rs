@@ -75,6 +75,7 @@ Rust-crypto-maintained supports the same algorithems as Rust-Crypto. Currently s
 #![forbid(future_incompatible)]
 
 #![cfg_attr(feature = "with-bench", feature(test))]
+#![cfg_attr(all(test, feature = "with-bench"), feature(maybe_uninit_extra))]
 
 extern crate rand;
 extern crate rustc_serialize as serialize;
@@ -126,7 +127,6 @@ pub mod threefish;
 pub mod symmetriccipher;
 #[allow(unsafe_code)]
 pub mod util;
-#[allow(unsafe_code)]
 pub mod whirlpool;
 
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]

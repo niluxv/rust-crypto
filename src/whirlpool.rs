@@ -35,7 +35,6 @@ assert_eq!(result,
 ```
 */
 
-use std::mem::uninitialized;
 use crate::cryptoutil::{write_u64_be, FixedBuffer64, FixedBuffer};
 use crate::digest::Digest;
 
@@ -80,7 +79,7 @@ impl Digest for Whirlpool {
         let mut carry = false;
         for i in 0..32 {
             let mut x = self.bit_length[self.bit_length.len() - i - 1] as u16;
-            
+
             if i < len_bits.len() {
                 x += len_bits[len_bits.len() - i - 1] as u16;
             } else if !carry {
@@ -90,7 +89,7 @@ impl Digest for Whirlpool {
             if carry {
                 x += 1;
             }
-            
+
             carry = x > 0xff;
             let pos = self.bit_length.len() -i - 1;
             self.bit_length[pos] = (x & 0xff) as u8;
@@ -137,7 +136,7 @@ impl Digest for Whirlpool {
         self.bit_length = [0; 32];
         self.buffer.reset();
         self.finalized = false;
-        self.hash = [0; 8];    
+        self.hash = [0; 8];
     }
 
     fn output_bits(&self) -> usize {
@@ -150,10 +149,10 @@ impl Digest for Whirlpool {
 }
 
 fn process_buffer(hash: &mut[u64; 8], buffer: &[u8]) {
-    let mut k: [u64; 8] = unsafe { uninitialized() };
-    let mut block: [u64; 8] = unsafe { uninitialized() };
-    let mut state: [u64; 8] = unsafe { uninitialized() };
-    let mut l: [u64; 8] = unsafe { uninitialized() };
+    let mut k: [u64; 8] = [0; 8];
+    let mut block: [u64; 8] = [0; 8];
+    let mut state: [u64; 8] = [0; 8];
+    let mut l: [u64; 8] = [0; 8];
 
     for i in 0..8 {
         block[i] =
@@ -204,7 +203,7 @@ fn process_buffer(hash: &mut[u64; 8], buffer: &[u8]) {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use super::*;
     use crate::digest::Digest;
 
@@ -255,6 +254,212 @@ mod test {
         println!("{:?}", d.result_str().to_ascii_uppercase());
         assert!(s.len() == 500000);
         assert!(d.result_str().to_ascii_uppercase() == "0C99005BEB57EFF50A7CF005560DDF5D29057FD86B20BFD62DECA0F1CCEA4AF51FC15490EDDC47AF32BB2B66C34FF9AD8C6008AD677F77126953B226E4ED8B01");
+    }
+
+}
+
+#[cfg(all(test, feature="with-bench"))]
+mod bench {
+    use super::*;
+    use test::Bencher;
+
+    fn process_buffer_zeroinit(hash: &mut[u64; 8], buffer: &[u8]) {
+        let mut k: [u64; 8] = [0; 8];
+        let mut block: [u64; 8] = [0; 8];
+        let mut state: [u64; 8] = [0; 8];
+        let mut l: [u64; 8] = [0; 8];
+
+        for i in 0..8 {
+            block[i] =
+                ((buffer[i * 8 + 0] as u64) << 56) ^
+                ((buffer[i * 8 + 1] as u64) << 48) ^
+                ((buffer[i * 8 + 2] as u64) << 40) ^
+                ((buffer[i * 8 + 3] as u64) << 32) ^
+                ((buffer[i * 8 + 4] as u64) << 24) ^
+                ((buffer[i * 8 + 5] as u64) << 16) ^
+                ((buffer[i * 8 + 6] as u64) <<  8) ^
+                ((buffer[i * 8 + 7] as u64)      );
+            k[i] = hash[i];
+            state[i] = block[i] ^ k[i];
+        }
+
+        for r in 1..(R + 1) /* [1, R] */ {
+            for i in 0..8 {
+                l[i] =
+                    C0[((k[(0 + i) % 8] >> 56)       ) as usize] ^
+                    C1[((k[(7 + i) % 8] >> 48) & 0xff) as usize] ^
+                    C2[((k[(6 + i) % 8] >> 40) & 0xff) as usize] ^
+                    C3[((k[(5 + i) % 8] >> 32) & 0xff) as usize] ^
+                    C4[((k[(4 + i) % 8] >> 24) & 0xff) as usize] ^
+                    C5[((k[(3 + i) % 8] >> 16) & 0xff) as usize] ^
+                    C6[((k[(2 + i) % 8] >>  8) & 0xff) as usize] ^
+                    C7[((k[(1 + i) % 8]      ) & 0xff) as usize] ^
+                    if i == 0 { RC[r] } else { 0 };
+            }
+            k = l;
+            for i in 0..8 {
+                l[i] =
+                    C0[((state[(0 + i) % 8] >> 56)       ) as usize] ^
+                    C1[((state[(7 + i) % 8] >> 48) & 0xff) as usize] ^
+                    C2[((state[(6 + i) % 8] >> 40) & 0xff) as usize] ^
+                    C3[((state[(5 + i) % 8] >> 32) & 0xff) as usize] ^
+                    C4[((state[(4 + i) % 8] >> 24) & 0xff) as usize] ^
+                    C5[((state[(3 + i) % 8] >> 16) & 0xff) as usize] ^
+                    C6[((state[(2 + i) % 8] >>  8) & 0xff) as usize] ^
+                    C7[((state[(1 + i) % 8]      ) & 0xff) as usize] ^
+                    k[i];
+            }
+            state = l;
+        }
+
+        for i in 0..8 {
+            hash[i] ^= state[i] ^ block[i];
+        }
+    }
+
+    #[allow(unsafe_code)]
+    fn process_buffer_uninit(hash: &mut[u64; 8], buffer: &[u8]) {
+        use std::mem::uninitialized;
+        let mut k: [u64; 8] = unsafe { uninitialized() };
+        let mut block: [u64; 8] = unsafe { uninitialized() };
+        let mut state: [u64; 8] = unsafe { uninitialized() };
+        let mut l: [u64; 8] = unsafe { uninitialized() };
+
+        for i in 0..8 {
+            block[i] =
+                ((buffer[i * 8 + 0] as u64) << 56) ^
+                ((buffer[i * 8 + 1] as u64) << 48) ^
+                ((buffer[i * 8 + 2] as u64) << 40) ^
+                ((buffer[i * 8 + 3] as u64) << 32) ^
+                ((buffer[i * 8 + 4] as u64) << 24) ^
+                ((buffer[i * 8 + 5] as u64) << 16) ^
+                ((buffer[i * 8 + 6] as u64) <<  8) ^
+                ((buffer[i * 8 + 7] as u64)      );
+            k[i] = hash[i];
+            state[i] = block[i] ^ k[i];
+        }
+
+        for r in 1..(R + 1) /* [1, R] */ {
+            for i in 0..8 {
+                l[i] =
+                    C0[((k[(0 + i) % 8] >> 56)       ) as usize] ^
+                    C1[((k[(7 + i) % 8] >> 48) & 0xff) as usize] ^
+                    C2[((k[(6 + i) % 8] >> 40) & 0xff) as usize] ^
+                    C3[((k[(5 + i) % 8] >> 32) & 0xff) as usize] ^
+                    C4[((k[(4 + i) % 8] >> 24) & 0xff) as usize] ^
+                    C5[((k[(3 + i) % 8] >> 16) & 0xff) as usize] ^
+                    C6[((k[(2 + i) % 8] >>  8) & 0xff) as usize] ^
+                    C7[((k[(1 + i) % 8]      ) & 0xff) as usize] ^
+                    if i == 0 { RC[r] } else { 0 };
+            }
+            k = l;
+            for i in 0..8 {
+                l[i] =
+                    C0[((state[(0 + i) % 8] >> 56)       ) as usize] ^
+                    C1[((state[(7 + i) % 8] >> 48) & 0xff) as usize] ^
+                    C2[((state[(6 + i) % 8] >> 40) & 0xff) as usize] ^
+                    C3[((state[(5 + i) % 8] >> 32) & 0xff) as usize] ^
+                    C4[((state[(4 + i) % 8] >> 24) & 0xff) as usize] ^
+                    C5[((state[(3 + i) % 8] >> 16) & 0xff) as usize] ^
+                    C6[((state[(2 + i) % 8] >>  8) & 0xff) as usize] ^
+                    C7[((state[(1 + i) % 8]      ) & 0xff) as usize] ^
+                    k[i];
+            }
+            state = l;
+        }
+
+        for i in 0..8 {
+            hash[i] ^= state[i] ^ block[i];
+        }
+    }
+
+    #[allow(unsafe_code)]
+    fn process_buffer_maybeuninit(hash: &mut[u64; 8], buffer: &[u8]) {
+        use std::mem::MaybeUninit;
+        let mut k: [MaybeUninit<u64>; 8] = unsafe { MaybeUninit::uninit().assume_init() };
+        let mut block: [MaybeUninit<u64>; 8] = unsafe { MaybeUninit::uninit().assume_init() };
+        let mut state: [MaybeUninit<u64>; 8] = unsafe { MaybeUninit::uninit().assume_init() };
+        let mut l: [MaybeUninit<u64>; 8] = unsafe { MaybeUninit::uninit().assume_init() };
+
+        for i in 0..8 {
+            let b_cur = block[i].write(
+                ((buffer[i * 8 + 0] as u64) << 56) ^
+                ((buffer[i * 8 + 1] as u64) << 48) ^
+                ((buffer[i * 8 + 2] as u64) << 40) ^
+                ((buffer[i * 8 + 3] as u64) << 32) ^
+                ((buffer[i * 8 + 4] as u64) << 24) ^
+                ((buffer[i * 8 + 5] as u64) << 16) ^
+                ((buffer[i * 8 + 6] as u64) <<  8) ^
+                ((buffer[i * 8 + 7] as u64)      ));
+            let k_cur = k[i].write(hash[i]);
+            state[i] = MaybeUninit::new(*b_cur ^ *k_cur);
+        }
+        let mut k = unsafe { std::mem::transmute::<[MaybeUninit<u64>; 8], [u64; 8]>(k) };
+        let mut block = unsafe { std::mem::transmute::<[MaybeUninit<u64>; 8], [u64; 8]>(block) };
+        let mut state = unsafe { std::mem::transmute::<[MaybeUninit<u64>; 8], [u64; 8]>(state) };
+        let mut l = unsafe { std::mem::transmute::<[MaybeUninit<u64>; 8], [u64; 8]>(l) };
+
+        for r in 1..(R + 1) /* [1, R] */ {
+            for i in 0..8 {
+                l[i] =
+                    C0[((k[(0 + i) % 8] >> 56)       ) as usize] ^
+                    C1[((k[(7 + i) % 8] >> 48) & 0xff) as usize] ^
+                    C2[((k[(6 + i) % 8] >> 40) & 0xff) as usize] ^
+                    C3[((k[(5 + i) % 8] >> 32) & 0xff) as usize] ^
+                    C4[((k[(4 + i) % 8] >> 24) & 0xff) as usize] ^
+                    C5[((k[(3 + i) % 8] >> 16) & 0xff) as usize] ^
+                    C6[((k[(2 + i) % 8] >>  8) & 0xff) as usize] ^
+                    C7[((k[(1 + i) % 8]      ) & 0xff) as usize] ^
+                    if i == 0 { RC[r] } else { 0 };
+            }
+            k = l;
+            for i in 0..8 {
+                l[i] =
+                    C0[((state[(0 + i) % 8] >> 56)       ) as usize] ^
+                    C1[((state[(7 + i) % 8] >> 48) & 0xff) as usize] ^
+                    C2[((state[(6 + i) % 8] >> 40) & 0xff) as usize] ^
+                    C3[((state[(5 + i) % 8] >> 32) & 0xff) as usize] ^
+                    C4[((state[(4 + i) % 8] >> 24) & 0xff) as usize] ^
+                    C5[((state[(3 + i) % 8] >> 16) & 0xff) as usize] ^
+                    C6[((state[(2 + i) % 8] >>  8) & 0xff) as usize] ^
+                    C7[((state[(1 + i) % 8]      ) & 0xff) as usize] ^
+                    k[i];
+            }
+            state = l;
+        }
+
+        for i in 0..8 {
+            hash[i] ^= state[i] ^ block[i];
+        }
+    }
+
+    fn whirlpool_process_bench<F>(b: &mut Bencher, f: F)
+        where F: Fn(&mut[u64; 8], &[u8])
+    {
+        let mut hash: [u64; 8] = [0; 8];
+        let mut input_buff: [u8; 64] = [0; 64];
+        input_buff[2] += 9;
+        input_buff[5] += 16;
+        input_buff[6] += 119;
+        input_buff[28] += 91;
+        input_buff[45] += 1;
+        input_buff[61] += 240;
+        b.iter(|| f(&mut hash, &input_buff[..]))
+    }
+
+    #[bench]
+    fn whirlpool_process_buff_uninit(b: &mut Bencher) {
+        whirlpool_process_bench(b, process_buffer_uninit)
+    }
+
+    #[bench]
+    fn whirlpool_process_buff_maybeuninit(b: &mut Bencher) {
+        whirlpool_process_bench(b, process_buffer_maybeuninit)
+    }
+
+    #[bench]
+    fn whirlpool_process_buff_zeroinit(b: &mut Bencher) {
+        whirlpool_process_bench(b, process_buffer_zeroinit)
     }
 }
 
