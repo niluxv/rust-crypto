@@ -19,14 +19,14 @@ use crate::symmetriccipher::{SynchronousStreamCipher, SymmetricCipherError};
 
 /// Write a u64 into a vector, which must be 8 bytes long. The value is written in big-endian
 /// format.
-pub fn write_u64_be(dst: &mut[u8], mut input: u64) {
+pub fn write_u64_be(dst: &mut[u8], input: u64) {
     assert!(dst.len() == 8);
     BigEndian::write_u64(dst, input);
 }
 
 /// Write a u64 into a vector, which must be 8 bytes long. The value is written in little-endian
 /// format.
-pub fn write_u64_le(dst: &mut[u8], mut input: u64) {
+pub fn write_u64_le(dst: &mut[u8], input: u64) {
     assert!(dst.len() == 8);
     LittleEndian::write_u64(dst, input);
 }
@@ -38,14 +38,14 @@ pub fn write_u64v_le(dst: &mut[u8], input: &[u64]) {
 
 /// Write a u32 into a vector, which must be 4 bytes long. The value is written in big-endian
 /// format.
-pub fn write_u32_be(dst: &mut [u8], mut input: u32) {
+pub fn write_u32_be(dst: &mut [u8], input: u32) {
     assert!(dst.len() == 4);
     BigEndian::write_u32(dst, input);
 }
 
 /// Write a u32 into a vector, which must be 4 bytes long. The value is written in little-endian
 /// format.
-pub fn write_u32_le(dst: &mut[u8], mut input: u32) {
+pub fn write_u32_le(dst: &mut[u8], input: u32) {
     assert!(dst.len() == 4);
     LittleEndian::write_u32(dst, input);
 }

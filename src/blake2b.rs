@@ -9,7 +9,7 @@ use crate::cryptoutil::{copy_memory, read_u64v_le, write_u64v_le};
 use crate::digest::Digest;
 use crate::mac::{Mac, MacResult};
 use crate::util::secure_memset;
-use byteorder::{BE, LE};
+use byteorder::{LE};
 
 static IV : [u64; 8] = [
   0x6a09e667f3bcc908, 0xbb67ae8584caa73b,
