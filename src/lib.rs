@@ -79,7 +79,6 @@ Rust-crypto-maintained supports the same algorithems as Rust-Crypto. Currently s
 
 extern crate rand;
 extern crate rustc_serialize as serialize;
-extern crate time;
 extern crate libc;
 
 #[cfg(all(test, feature = "with-bench"))]

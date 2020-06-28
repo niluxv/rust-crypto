@@ -47,7 +47,7 @@
 use crate::cryptoutil::copy_memory;
 
 use rand::{Rng, SeedableRng};
-use time::precise_time_s;
+use crate::util::precise_time_s;
 
 use crate::aessafe::AesSafe256Encryptor;
 use crate::cryptoutil::read_u32_le;

@@ -6,6 +6,19 @@
 
 use libc;
 
+/// Systemtime as Unix/POSIX epoch time.
+/// Seconds 1970-01-01.
+///
+/// Copied from the [`time` crate](https://crates.io/crates/time):
+/// [`time::precise_time_s`](https://docs.rs/time/0.2.16/src/time/lib.rs.html#618-624)
+pub(crate) fn precise_time_s() -> f64 {
+    use std::time::SystemTime;
+
+    (SystemTime::now().duration_since(SystemTime::UNIX_EPOCH))
+        .expect("System clock was before 1970.")
+        .as_secs_f64()
+}
+
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 extern {
     pub fn rust_crypto_util_supports_aesni() -> u32;
