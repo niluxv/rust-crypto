@@ -1,0 +1,13 @@
+# Run the test suite with different sanitisers enabled
+
+# ASAN: memory unsafety and leak detector
+cargo clean
+env CC=clang CXX=clang++ CFLAGS=-fsanitize=address CXXFLAGS=-fsanitize=address RUSTFLAGS=-Zsanitizer=address RUSTDOCFLAGS=-Zsanitizer=address cargo +nightly test -Z build-std --target x86_64-unknown-linux-gnu
+
+# MSAN: uninitialised mememory detector
+cargo clean
+env CC=clang CXX=clang++ CFLAGS=-fsanitize=memory CXXFLAGS=-fsanitize=memory RUSTFLAGS=-Zsanitizer=memory RUSTDOCFLAGS=-Zsanitizer=memory cargo +nightly test -Z build-std --target x86_64-unknown-linux-gnu
+
+# TSAN: datarace detector
+# cargo clean
+# env CC=clang CXX=clang++ CFLAGS=-fsanitize=thread CXXFLAGS=-fsanitize=thread RUSTFLAGS=-Zsanitizer=thread RUSTDOCFLAGS=-Zsanitizer=thread cargo +nightly test -Z build-std --target x86_64-unknown-linux-gnu
